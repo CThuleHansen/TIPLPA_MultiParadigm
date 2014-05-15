@@ -1,4 +1,4 @@
-;The procedure below creates sample points based on start x value, stop x value and number of sample points
+;The procedure below creates sample points based on start x value, stop x value and number of sample points.
 (define GenerateSamplePoints
   (letrec ((GeneratePoints
             (lambda (Interval Acc Stop)
@@ -11,7 +11,7 @@
          '()
          (reverse (GeneratePoints interval (list (+ start (- interval (/ interval 2)))) stop)))))))
 
-
+;zip takes two lists and returns a single list of the corresponding pairs of elements from the input lists.
 (define zip
   (letrec
       ((innerzip
@@ -23,7 +23,7 @@
   (lambda (lst1 lst2)
     (reverse (innerzip lst1 lst2 '())))))
 
-;The procedure creates a list of pairs with x and y values
+;The procedure takes a function and a list of sample points and creates a list of pairs with x and y values
 ;sp is short for sample points, which means the x values
 (define CreateGraphValues
   (letrec ((createPoints

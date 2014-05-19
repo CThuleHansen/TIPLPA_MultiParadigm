@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using IronScheme;
+using SchemeLibrary;
 
 
 
@@ -23,17 +23,18 @@ namespace SchemeGraphs
     /// </summary>
     public partial class MainWindow : Window
     {
-        private SchemeHandler schemeHandler;
+        private SchemeEvalProxy schemeHandler;
         public MainWindow()
         {
             InitializeComponent();
-            schemeHandler = new SchemeHandler();
+            schemeHandler = new SchemeEvalProxy();
             showColumnChart();
         }
 
         private void Evaluate_Click(object sender, RoutedEventArgs e)
         {
-            DisplayArea.Text = schemeHandler.Evaluate(Input.Text).ToString();
+            //TODO: Major changes - Can only work with integers, not symbols
+            DisplayArea.Text = schemeHandler.Evaluate<Int32>(Input.Text).ToString();
         }
 
         private void showColumnChart()
@@ -49,14 +50,4 @@ namespace SchemeGraphs
             lineChart.DataContext = valueList;
         }
     }
-
-    public class SchemeHandler
-    {
-        public object Evaluate(string input)
-        {
-            return input.Eval(); // calls IronScheme.RuntimeExtensions.Eval(string)
-        }
-    }  
-
-
 }

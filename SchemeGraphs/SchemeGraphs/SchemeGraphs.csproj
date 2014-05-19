@@ -9,12 +9,13 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SchemeGraphs</RootNamespace>
     <AssemblyName>SchemeGraphs</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -36,12 +37,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="IronScheme">
-      <HintPath>..\packages\IronScheme.0.9.103684\lib\IronScheme.dll</HintPath>
-    </Reference>
-    <Reference Include="IronScheme.Web.Runtime">
-      <HintPath>..\packages\IronScheme.0.9.103684\lib\IronScheme.Web.Runtime.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Controls.DataVisualization.Toolkit">
@@ -105,71 +100,13 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="lib\as-match.sls" />
-    <None Include="lib\bench.sls" />
-    <None Include="lib\datatype.sls" />
-    <None Include="lib\diff.sls" />
     <None Include="lib\fectors.sls" />
-    <None Include="lib\ironscheme\clr.sls" />
-    <None Include="lib\ironscheme\clr\dynamic.sls" />
-    <None Include="lib\ironscheme\clr\helpers.sls" />
-    <None Include="lib\ironscheme\clr\reflection.sls" />
-    <None Include="lib\ironscheme\clr\shorthand-helper.sls" />
-    <None Include="lib\ironscheme\clr\shorthand.sls" />
-    <None Include="lib\ironscheme\console.sls" />
-    <None Include="lib\ironscheme\contracts-helper.sls" />
-    <None Include="lib\ironscheme\contracts.sls" />
-    <None Include="lib\ironscheme\conversions.sls" />
-    <None Include="lib\ironscheme\datetime.sls" />
-    <None Include="lib\ironscheme\debugger.sls" />
-    <None Include="lib\ironscheme\environment.sls" />
-    <None Include="lib\ironscheme\ffi.sls" />
-    <None Include="lib\ironscheme\files.sls" />
-    <None Include="lib\ironscheme\fsm-cond-helpers.sls" />
-    <None Include="lib\ironscheme\fsm-cond.sls" />
-    <None Include="lib\ironscheme\integrable.sls" />
-    <None Include="lib\ironscheme\io.sls" />
-    <None Include="lib\ironscheme\linq.sls" />
-    <None Include="lib\ironscheme\process.sls" />
-    <None Include="lib\ironscheme\random.sls" />
-    <None Include="lib\ironscheme\record-case.sls" />
-    <None Include="lib\ironscheme\regex-cond.sls" />
-    <None Include="lib\ironscheme\regex.sls" />
-    <None Include="lib\ironscheme\registry.sls" />
-    <None Include="lib\ironscheme\strings.sls" />
-    <None Include="lib\ironscheme\syntax.sls" />
-    <None Include="lib\ironscheme\syntax\define-macro.sls" />
-    <None Include="lib\ironscheme\syntax\library-utils.sls" />
-    <None Include="lib\ironscheme\syntax\parameters.sls" />
-    <None Include="lib\ironscheme\syntax\shorthand.sls" />
-    <None Include="lib\ironscheme\syntax\symbolic-case.sls" />
-    <None Include="lib\ironscheme\syntax\utils.sls" />
-    <None Include="lib\ironscheme\threading.sls" />
-    <None Include="lib\ironscheme\typed.sls" />
-    <None Include="lib\ironscheme\typed\core.sls" />
-    <None Include="lib\ironscheme\typed\integrable.sls" />
-    <None Include="lib\ironscheme\typed\parsing-helper.sls" />
-    <None Include="lib\ironscheme\typed\parsing.sls" />
-    <None Include="lib\ironscheme\typed\struct-case.sls" />
-    <None Include="lib\ironscheme\typed\struct-descriptor.sls" />
-    <None Include="lib\ironscheme\typed\struct.sls" />
-    <None Include="lib\ironscheme\unsafe\fixnums.sls" />
-    <None Include="lib\ironscheme\web-utils.sls" />
-    <None Include="lib\ironscheme\web.sls" />
-    <None Include="lib\ironscheme\web\controllers.sls" />
-    <None Include="lib\ironscheme\web\models.sls" />
-    <None Include="lib\ironscheme\web\routing-helper.sls" />
-    <None Include="lib\ironscheme\web\routing.sls" />
-    <None Include="lib\ironscheme\web\views.sls" />
-    <None Include="lib\ironscheme\xml.sls" />
     <None Include="lib\LICENSE.fectors" />
     <None Include="lib\LICENSE.minikanren" />
-    <None Include="lib\list-match.sls" />
-    <None Include="lib\match.sls" />
     <None Include="lib\minikanren.sls" />
     <None Include="lib\minikanren\mk.sls" />
     <None Include="lib\minikanren\mkextraforms.sls" />
     <None Include="lib\minikanren\mkprelude.sls" />
-    <None Include="lib\pfds\bbtrees.sls" />
     <None Include="lib\pfds\deques.sls" />
     <None Include="lib\pfds\dlists.sls" />
     <None Include="lib\pfds\fingertrees.sls" />
@@ -179,21 +116,16 @@
     <None Include="lib\pfds\queues.sls" />
     <None Include="lib\pfds\sequences.sls" />
     <None Include="lib\pfds\sets.sls" />
-    <None Include="lib\pregexp.sls" />
     <None Include="lib\README.fectors" />
     <None Include="lib\README.minikanren" />
     <None Include="lib\simple-regression-testing.sls" />
-    <None Include="lib\smart-curry.sls" />
     <None Include="lib\srfi\0.sls" />
     <None Include="lib\srfi\0\cond-expand.sls" />
     <None Include="lib\srfi\1.sls" />
     <None Include="lib\srfi\101.sls" />
     <None Include="lib\srfi\101\random-access-lists.sls" />
-    <None Include="lib\srfi\102.sls" />
-    <None Include="lib\srfi\102\procedure-arity.sls" />
     <None Include="lib\srfi\11.sls" />
     <None Include="lib\srfi\111.sls" />
-    <None Include="lib\srfi\111\boxes.sls" />
     <None Include="lib\srfi\112.sls" />
     <None Include="lib\srfi\112\environment-inquiry.sls" />
     <None Include="lib\srfi\11\let-values.sls" />
@@ -344,10 +276,15 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="test.ss" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SchemeLibrary\SchemeLibrary.csproj">
+      <Project>{a7232140-c65f-46ed-bf69-80e0472d80e6}</Project>
+      <Name>SchemeLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

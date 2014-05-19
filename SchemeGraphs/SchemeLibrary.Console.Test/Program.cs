@@ -6,6 +6,9 @@ namespace SchemeLibrary.Console.Test
     {
         static void Main(string[] args)
         {
+
+            System.Console.WriteLine("Hello Rasmus from Git");
+
             System.Console.WriteLine("Loading scheme file");
             var loader = new SchemeLoader();
             loader.Import("simple.ss");

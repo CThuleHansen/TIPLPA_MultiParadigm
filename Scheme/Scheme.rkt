@@ -1,27 +1,42 @@
 (define Interval
-  (lambda (start stop sp)
-    (/ (- stop start) (- sp 1))))
-; The procedure "GenerateSamplePoints" takes a start and stop value and a amount of sample points "sp" and
+  (lambda (start stop NrOfPoints)
+    (/ (- stop start) (- NrOfPoints 1))))
+; The procedure "GenerateSamplePositions" takes a start and stop value and a amount of sample points "sp" and
 ; returns a list of "sp" x-values equally spread out from start to stop.
 ; "start" is the start of the interval
 ; "stop" is the stop of the interval
-; "sp" is the number of x-values to generate in the interval
-(define GenerateSamplePoints
-  (letrec ((GeneratePoints
+; "CountOfPoints" is the number of x-values to generate in the interval
+(define GenerateSamplePositions
+  (letrec ((GeneratePositions
             (lambda (Interval Acc Stop)
             (if (> (+ (car Acc) Interval) Stop)
                 Acc
-                (GeneratePoints Interval (cons (+ (car Acc) Interval) Acc) Stop )))))
-  (lambda (start stop sp)
-    (let ((interval (Interval start stop sp)))
+                (GeneratePositions Interval (cons (+ (car Acc) Interval) Acc) Stop )))))
+  (lambda (start stop CountOfPoints)
+    (let ((interval (Interval start stop CountOfPoints)))
     (if (<= stop start)
          '()
-         (reverse (GeneratePoints interval (list start) stop)))))))
+         (reverse (GeneratePositions interval (list start) stop)))))))
 
-;(GenerateSamplePoints 1 5 5) ; => 1 2 3 4 5
-;(GenerateSamplePoints 0 5 6) ; => 0 1 2 3 4 5
-;(GenerateSamplePoints 10 20 11) ; => 10 11 12 13 14 15 16 17 18 19 20
-;(GenerateSamplePoints 0 1/2 6) ; => 0 0.1 0.2 0.3 0.4 0.5
+;(GenerateSamplePositions 1 5 5) ; => 1 2 3 4 5
+;(GenerateSamplePositions 0 5 6) ; => 0 1 2 3 4 5
+;(GenerateSamplePositions 10 20 11) ; => 10 11 12 13 14 15 16 17 18 19 20
+;(GenerateSamplePositions 0 1/2 6) ; => 0 0.1 0.2 0.3 0.4 0.5
+(define GenerateSamplePositions2
+  (letrec ((GeneratePositions
+            (lambda (Interval Acc Start Value)
+            (if (< Value Start)
+                Acc
+                (GeneratePositions Interval (cons Value Acc) Start (- Value Interval))))))
+  (lambda (start Stop CountOfPoints)
+    (let ((interval (Interval Start Stop CountOfPoints)))
+    (if (<= Stop Start)
+         '()
+        (GeneratePositions interval '() Start Stop))))))
+(GenerateSamplePositions2 1 5 5) ; => 1 2 3 4 5
+;(GenerateSamplePositions2 0 5 6) ; => 0 1 2 3 4 5
+;(GenerateSamplePositions2 10 20 11) ; => 10 11 12 13 14 15 16 17 18 19 20
+;(GenerateSamplePositions2 0 1/2 6) ; => 0 0.1 0.2 0.3 0.4 0.5
 
 ;zip takes two lists and returns a single list, where each element is a pair of an element i from both lists.
 (define zip
@@ -35,18 +50,18 @@
   (lambda (lst1 lst2)
     (reverse (innerzip lst1 lst2 '())))))
 
-; The procedure "CreateGraphValues " takes a function and a list of sample points and returns a list of pairs with x and f(x)-values
+; The procedure "CreateSamplePairs" takes a function and a list of sample positions and returns a list of pairs with x and f(x)-values
 ; "func" is the function used to generate the y-values from the x-values
-; "sp" is the sample points which is the x-values to base the f(x)-values on. See "GenerateSamplePoints" for further explanation of the "sp"-parameter.
-(define CreateGraphValues
-  (letrec ((createPoints
+; "sp" is the sample positions which is the x-values to base the f(x)-values on.
+(define CreateSamplePairs
+  (letrec ((CreatePairs
             (lambda (func acc sp)
               (if (null? sp)
                   acc
-                  (createPoints func (cons (func (car sp)) acc) (cdr sp))))))
+                  (CreatePairs func (cons (func (car sp)) acc) (cdr sp))))))
   (lambda (func sp)
-    (zip sp (reverse (createPoints func '() sp))))))
-;(CreateGraphValues (lambda (x) (* x x)) (list 1 2 3)) ; => ((1.1) (2.4) (3.9))
+    (zip sp (reverse (CreatePairs func '() sp))))))
+;(CreateSamplePairs (lambda (x) (* x x)) (list 1 2 3)) ; => ((1.1) (2.4) (3.9))
 
 ; The procedure "derivative" takes a function and returns the derived function.
 ; "func" is the function to create the derived function from
@@ -63,14 +78,11 @@
 ; The procedure "CreateDerivativeGraphValues" takes a function and a list of sample points
 ; and returns a list of pairs with x and f'(x)-values
 ; "func" is the function to create the derivative function from
-; "sp" is the x-values to base the f'(x)-values on. See "GenerateSamplePoints" for further explanation of the "sp"-parameter.
+; "sp" is the sample positions to base the f'(x)-values on.
 (define CreateDerivativeGraphValues
   (lambda (func sp)
-    (let ((funcderi (derivative func)))
-      (CreateGraphValues (derivative func) sp))))
-;(CreateDerivativeGraphValues (lambda (x) (* x x)) (list 1 2 3)) ; => ((1.2)(2.4)(3.6))
-
-
+      (CreateSamplePairs (derivative func) sp)))
+(CreateDerivativeGraphValues (lambda (x) (* x x)) (list 1 2 3)) ; => ((1.2)(2.4)(3.6))
 
 ; The procedure "CreateIntegationGraphValues" takes a function, a start and stop value and a count of samples and
 ; returns the value of the integration of the function between start and stop with a number of samples
@@ -82,6 +94,20 @@
                  acc
                  (CreateIntegrationGraphValuesRec (cdr sp) interval (+ acc (* interval (cdr (car sp))))))))) 
   (lambda (func start stop s)
-    (CreateIntegrationGraphValuesRec (CreateGraphValues func (GenerateSamplePoints start stop s)) (Interval start stop s)  0))))
+    (CreateIntegrationGraphValuesRec (CreateSamplePairs func (GenerateSamplePositions start stop s)) (Interval start stop s)  0))))
 ;Test
 (CreateIntegationGraphValues (lambda (x) (* x x)) 1 5 5000) ; => 41.3333
+
+; By with stop and moving to start it is possible to spare a step and thereby making it better
+(define CalculateIntegrationValue  
+  (letrec ((CalculateIntegrationValueRecursive
+            (lambda (func interval start value acc)
+              (if (< value start)
+                  acc
+                  (CalculateIntegrationValueRecursive func interval start (- value interval) (+ acc (* interval (func value))))))))
+  (lambda (func start stop CountOfSamples)
+    (let ((interval (Interval start stop CountOfSamples)))
+    (if (>= start stop)
+        '()
+        (CalculateIntegrationValueRecursive func interval start (- stop interval) 0))))))
+(CalculateIntegrationValue (lambda (x) (* x x)) 1 5 10) ; => 41.3333

@@ -65,7 +65,7 @@
 
 (define CreateFunctionSamplePairs
   (lambda (func start stop CountOfPoints)
-    (CreateSamplePairs func (GenerateSamplePositions2 start stop CountOfPoints))));
+    (CreateSamplePairs func (GenerateSamplePositions2 start stop CountOfPoints))))
 (CreateFunctionSamplePairs (lambda (x) (* x x)) 1 3 3); => ((1.1) (2.4) (3.9))
 
 ; The procedure "derivative" takes a function and returns the derived function.
@@ -88,6 +88,11 @@
   (lambda (func sp)
       (CreateSamplePairs (derivative func) sp)))
 ;(CreateDerivativeGraphValues (lambda (x) (* x x)) (list 1 2 3)) ; => ((1.2)(2.4)(3.6))
+
+(define CreateDerivativeFunctionSamplePairs
+  (lambda (func start stop CountOfPoints)
+    (CreateDerivativeGraphValues func (GenerateSamplePositions2 start stop CountOfPoints))))
+(CreateDerivativeFunctionSamplePairs (lambda (x) (* x x)) 1 3 3) ; => ((1.2)(2.4)(3.6))
 
 ; The procedure "CreateIntegationGraphValues" takes a function, a start and stop value and a count of samples and
 ; returns the value of the integration of the function between start and stop with a number of samples

@@ -1,5 +1,6 @@
 ﻿using System;
-using SchemeLibrary.Loaders;
+using SchemeLibrary.Loaders.Implementation;
+using SchemeLibrary.Math.Implementation;
 
 namespace SchemeLibrary.Console.Test
 {
@@ -9,15 +10,19 @@ namespace SchemeLibrary.Console.Test
         {
             System.Console.WriteLine("Loading scheme file");
             var loader = new SchemeLoader();
-            loader.Import("simple.ss");
+            //loader.Import("simple.ss");
+            //loader.Import("func-lib.ss");
+            loader.Import("Scheme.rkt");
             System.Console.WriteLine("Finished loading scheme file");
 
 
             System.Console.WriteLine("Evaluating scheme statement");
-            var evaluator = new SchemeEvalProxy();
-            var result = evaluator.Evaluate<Int32>("(increment 5)");
+            var evaluator = new ProxySchemeEvaluator();
+            //var result = evaluator.Evaluate<Int32>("(increment 5)");
+            //System.Console.WriteLine("The result is: {0}", result);
+            var plotter = new FunctionPlotter(evaluator);
+            var result = plotter.PlotFunction("(lambda (x) (* x x))", 1, 3, 3);
 
-            System.Console.WriteLine("The result is: {0}", result);
 
             System.Console.ReadLine();
         }

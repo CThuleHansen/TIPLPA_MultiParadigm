@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using IronScheme;
 
-namespace SchemeLibrary.Loaders
+namespace SchemeLibrary.Loaders.Implementation
 {
     /// <summary>
     /// This class simply loads the scheme file as text and evaluates it using IronScheme. 

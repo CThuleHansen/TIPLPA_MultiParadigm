@@ -1,6 +1,6 @@
 ﻿namespace SchemeLibrary.Loaders
 {
-    interface ISchemeLoader
+    public interface ISchemeLoader
     {
         void Import(string filename);
     }

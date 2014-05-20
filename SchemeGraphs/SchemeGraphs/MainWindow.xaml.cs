@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using SchemeLibrary.Loaders;
+using SchemeLibrary.Loaders.Implementation;
 
 
 namespace SchemeGraphs
@@ -11,18 +11,18 @@ namespace SchemeGraphs
     /// </summary>
     public partial class MainWindow : Window
     {
-        private SchemeEvalProxy schemeHandler;
+        private ProxySchemeEvaluator _proxySchemeHandler;
         public MainWindow()
         {
             InitializeComponent();
-            schemeHandler = new SchemeEvalProxy();
+            _proxySchemeHandler = new ProxySchemeEvaluator();
             showColumnChart();
         }
 
         private void Evaluate_Click(object sender, RoutedEventArgs e)
         {
             //TODO: Major changes - Can only work with integers, not symbols
-            DisplayArea.Text = schemeHandler.Evaluate<Int32>(Input.Text).ToString();
+            DisplayArea.Text = _proxySchemeHandler.Evaluate<Int32>(Input.Text).ToString();
         }
 
         private void showColumnChart()

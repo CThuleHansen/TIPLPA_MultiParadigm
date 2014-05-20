@@ -1,6 +1,6 @@
 ﻿namespace SchemeLibrary.Loaders 
 {
-    interface IEvalProxy
+    public interface ISchemeEvaluator
     {
         T Evaluate<T>(string procedure, params object[] args);
     }

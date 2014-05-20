@@ -10,18 +10,17 @@ namespace SchemeLibrary.Console.Test
         {
             System.Console.WriteLine("Loading scheme file");
             var loader = new SchemeLoader();
-            //loader.Import("simple.ss");
-            //loader.Import("func-lib.ss");
+            loader.Import("simple.ss");
             loader.Import("Scheme.rkt");
             System.Console.WriteLine("Finished loading scheme file");
 
 
             System.Console.WriteLine("Evaluating scheme statement");
             var evaluator = new ProxySchemeEvaluator();
-            //var result = evaluator.Evaluate<Int32>("(increment 5)");
-            //System.Console.WriteLine("The result is: {0}", result);
+            var result = evaluator.Evaluate<Int32>("(increment {0})",5);
+            System.Console.WriteLine("The result is: {0}", result);
             var plotter = new FunctionPlotter(evaluator);
-            var result = plotter.PlotFunction("(lambda (x) (* x x))", 1, 3, 3);
+            var result2 = plotter.PlotFunction("(lambda (x) (* x x))", 1, 3, 3);
 
 
             System.Console.ReadLine();

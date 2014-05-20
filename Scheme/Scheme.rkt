@@ -33,7 +33,7 @@
     (if (<= Stop Start)
          '()
         (GeneratePositions interval '() Start Stop))))))
-(GenerateSamplePositions2 1 5 5) ; => 1 2 3 4 5
+;(GenerateSamplePositions2 1 5 5) ; => 1 2 3 4 5
 ;(GenerateSamplePositions2 0 5 6) ; => 0 1 2 3 4 5
 ;(GenerateSamplePositions2 10 20 11) ; => 10 11 12 13 14 15 16 17 18 19 20
 ;(GenerateSamplePositions2 0 1/2 6) ; => 0 0.1 0.2 0.3 0.4 0.5
@@ -63,6 +63,11 @@
     (zip sp (reverse (CreatePairs func '() sp))))))
 ;(CreateSamplePairs (lambda (x) (* x x)) (list 1 2 3)) ; => ((1.1) (2.4) (3.9))
 
+(define CreateFunctionSamplePairs
+  (lambda (func start stop CountOfPoints)
+    (CreateSamplePairs func (GenerateSamplePositions2 start stop CountOfPoints))));
+(CreateFunctionSamplePairs (lambda (x) (* x x)) 1 3 3); => ((1.1) (2.4) (3.9))
+
 ; The procedure "derivative" takes a function and returns the derived function.
 ; "func" is the function to create the derived function from
 ; It is pretty the same method found here: http://www.mathsisfun.com/calculus/derivatives-introduction.html
@@ -82,7 +87,7 @@
 (define CreateDerivativeGraphValues
   (lambda (func sp)
       (CreateSamplePairs (derivative func) sp)))
-(CreateDerivativeGraphValues (lambda (x) (* x x)) (list 1 2 3)) ; => ((1.2)(2.4)(3.6))
+;(CreateDerivativeGraphValues (lambda (x) (* x x)) (list 1 2 3)) ; => ((1.2)(2.4)(3.6))
 
 ; The procedure "CreateIntegationGraphValues" takes a function, a start and stop value and a count of samples and
 ; returns the value of the integration of the function between start and stop with a number of samples
@@ -96,7 +101,7 @@
   (lambda (func start stop s)
     (CreateIntegrationGraphValuesRec (CreateSamplePairs func (GenerateSamplePositions start stop s)) (Interval start stop s)  0))))
 ;Test
-(CreateIntegationGraphValues (lambda (x) (* x x)) 1 5 5000) ; => 41.3333
+;(CreateIntegationGraphValues (lambda (x) (* x x)) 1 5 5000) ; => 41.3333
 
 ; By with stop and moving to start it is possible to spare a step and thereby making it better
 (define CalculateIntegrationValue  
@@ -110,4 +115,4 @@
     (if (>= start stop)
         '()
         (CalculateIntegrationValueRecursive func interval start (- stop interval) 0))))))
-(CalculateIntegrationValue (lambda (x) (* x x)) 1 5 10) ; => 41.3333
+;(CalculateIntegrationValue (lambda (x) (* x x)) 1 5 10) ; => 41.3333

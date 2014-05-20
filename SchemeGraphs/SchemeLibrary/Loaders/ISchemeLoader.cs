@@ -1,4 +1,4 @@
-﻿namespace SchemeLibrary
+﻿namespace SchemeLibrary.Loaders
 {
     interface ISchemeLoader
     {

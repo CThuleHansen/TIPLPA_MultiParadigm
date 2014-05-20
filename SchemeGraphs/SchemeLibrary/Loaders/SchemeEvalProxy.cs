@@ -1,5 +1,4 @@
-﻿using IronScheme;
-namespace SchemeLibrary
+﻿namespace SchemeLibrary.Loaders
 {
     /// <summary>
     /// This class is serves as a proxy for the IronScheme evaluation of scheme. 

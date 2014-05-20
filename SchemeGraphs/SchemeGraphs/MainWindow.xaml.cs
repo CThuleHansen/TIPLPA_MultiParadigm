@@ -1,19 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using SchemeLibrary;
-
+using SchemeLibrary.Loaders;
 
 
 namespace SchemeGraphs
@@ -39,12 +27,14 @@ namespace SchemeGraphs
 
         private void showColumnChart()
         {
-            List<KeyValuePair<string, int>> valueList = new List<KeyValuePair<string, int>>();
-            valueList.Add(new KeyValuePair<string, int>("1", 60));
-            valueList.Add(new KeyValuePair<string, int>("2", 20));
-            valueList.Add(new KeyValuePair<string, int>("3", 50));
-            valueList.Add(new KeyValuePair<string, int>("4", 30));
-            valueList.Add(new KeyValuePair<string, int>("5", 40));
+            var valueList = new List<KeyValuePair<string, int>>
+            {
+                new KeyValuePair<string, int>("1", 60),
+                new KeyValuePair<string, int>("2", 20),
+                new KeyValuePair<string, int>("3", 50),
+                new KeyValuePair<string, int>("4", 30),
+                new KeyValuePair<string, int>("5", 40)
+            };
 
             //Setting data for line chart
             lineChart.DataContext = valueList;

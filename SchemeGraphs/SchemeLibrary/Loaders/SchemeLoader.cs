@@ -1,7 +1,7 @@
-﻿using IronScheme;
-using IronScheme.Runtime;
-using System.IO;
-namespace SchemeLibrary
+﻿using System.IO;
+using IronScheme;
+
+namespace SchemeLibrary.Loaders
 {
     /// <summary>
     /// This class simply loads the scheme file as text and evaluates it using IronScheme. 

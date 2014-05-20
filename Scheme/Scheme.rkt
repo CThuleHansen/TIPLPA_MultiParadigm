@@ -119,4 +119,4 @@
     (if (>= start stop)
         '()
         (CalculateIntegrationValueRecursive func interval start (- stop interval) 0))))))
-(CalculateIntegrationValue (lambda (x) (* x x)) 1 5 5000) ; => 41.3333
+;(CalculateIntegrationValue (lambda (x) (* x x)) 1 5 5000) ; => 41.3333

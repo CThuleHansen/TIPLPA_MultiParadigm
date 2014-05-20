@@ -53,9 +53,6 @@
     <Content Include="simple.ss">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="func-lib.ss">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SchemeLibrary\SchemeLibrary.csproj">

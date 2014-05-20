@@ -1,42 +1,26 @@
 (define Interval
-  (lambda (start stop NrOfPoints)
-    (/ (- stop start) (- NrOfPoints 1))))
-; The procedure "GenerateSamplePositions" takes a start and stop value and a amount of sample points "sp" and
+  (lambda (start stop countOfPoints)
+    (/ (- stop start) (- countOfPoints 1))))
+; The procedure "GenerateSamplePositions" takes a start and stop value and a amount of sample points and
 ; returns a list of "sp" x-values equally spread out from start to stop.
 ; "start" is the start of the interval
 ; "stop" is the stop of the interval
 ; "CountOfPoints" is the number of x-values to generate in the interval
 (define GenerateSamplePositions
   (letrec ((GeneratePositions
-            (lambda (Interval Acc Stop)
-            (if (> (+ (car Acc) Interval) Stop)
-                Acc
-                (GeneratePositions Interval (cons (+ (car Acc) Interval) Acc) Stop )))))
-  (lambda (start stop CountOfPoints)
-    (let ((interval (Interval start stop CountOfPoints)))
+            (lambda (interval acc start value)
+            (if (< value start)
+                acc
+                (GeneratePositions interval (cons value acc) start (- value interval))))))
+  (lambda (start stop countOfPoints)
+    (let ((interval (Interval start stop countOfPoints)))
     (if (<= stop start)
          '()
-         (reverse (GeneratePositions interval (list start) stop)))))))
-
+        (GeneratePositions interval '() start stop))))))
 ;(GenerateSamplePositions 1 5 5) ; => 1 2 3 4 5
 ;(GenerateSamplePositions 0 5 6) ; => 0 1 2 3 4 5
 ;(GenerateSamplePositions 10 20 11) ; => 10 11 12 13 14 15 16 17 18 19 20
 ;(GenerateSamplePositions 0 1/2 6) ; => 0 0.1 0.2 0.3 0.4 0.5
-(define GenerateSamplePositions2
-  (letrec ((GeneratePositions
-            (lambda (Interval Acc Start Value)
-            (if (< Value Start)
-                Acc
-                (GeneratePositions Interval (cons Value Acc) Start (- Value Interval))))))
-  (lambda (start Stop CountOfPoints)
-    (let ((interval (Interval Start Stop CountOfPoints)))
-    (if (<= Stop Start)
-         '()
-        (GeneratePositions interval '() Start Stop))))))
-;(GenerateSamplePositions2 1 5 5) ; => 1 2 3 4 5
-;(GenerateSamplePositions2 0 5 6) ; => 0 1 2 3 4 5
-;(GenerateSamplePositions2 10 20 11) ; => 10 11 12 13 14 15 16 17 18 19 20
-;(GenerateSamplePositions2 0 1/2 6) ; => 0 0.1 0.2 0.3 0.4 0.5
 
 ;zip takes two lists and returns a single list, where each element is a pair of an element i from both lists.
 (define zip
@@ -51,7 +35,7 @@
     (reverse (innerzip lst1 lst2 '())))))
 
 ; The procedure "CreateSamplePairs" takes a function and a list of sample positions and returns a list of pairs with x and f(x)-values
-; "func" is the function used to generate the y-values from the x-values
+; "func" is the function used to generate the f(x)-values from the x-values
 ; "sp" is the sample positions which is the x-values to base the f(x)-values on.
 (define CreateSamplePairs
   (letrec ((CreatePairs
@@ -63,36 +47,38 @@
     (zip sp (reverse (CreatePairs func '() sp))))))
 ;(CreateSamplePairs (lambda (x) (* x x)) (list 1 2 3)) ; => ((1.1) (2.4) (3.9))
 
+; The procedure "CreateFunctionSamplePairs" wraps the procedure "CreateSamplePairs". It takes a func, a start and stop value and a amount of sample points and
+; returns a list of corresponding x and f(x) pairs.
+; "func" is the function used to generate the f(x)-values from the x-values
+; "start" is the start of the interval
+; "stop" is the stop of the interval
+; "CountOfPoints" is the number of x-values to generate in the interval
 (define CreateFunctionSamplePairs
-  (lambda (func start stop CountOfPoints)
-    (CreateSamplePairs func (GenerateSamplePositions2 start stop CountOfPoints))))
+  (lambda (func start stop countOfPoints)
+    (CreateSamplePairs func (GenerateSamplePositions start stop countOfPoints))))
 ;(CreateFunctionSamplePairs (lambda (x) (* x x)) 1 3 3); => ((1.1) (2.4) (3.9))
-
-; The procedure "derivative" takes a function and returns the derived function.
-; "func" is the function to create the derived function from
-; It is pretty the same method found here: http://www.mathsisfun.com/calculus/derivatives-introduction.html
-; Make the dx smaller to enhance the result
-(define dx 0.001)
-
-(define derivative
-  (lambda (func)
-    (lambda (x)
-      (/ (- (func (+ x dx)) (func x))
-         dx))))
 
 ; The procedure "CreateDerivativeGraphValues" takes a function and a list of sample points
 ; and returns a list of pairs with x and f'(x)-values
 ; "func" is the function to create the derivative function from
 ; "sp" is the sample positions to base the f'(x)-values on.
+; The inner procedure "derivative" takes a function and returns the derived function.
+; "func" is the function to create the derived function from
+; "dx" is a measure of deltax going to zero
+; http://www.mathsisfun.com/calculus/derivatives-introduction.html
 (define CreateDerivativeGraphValues
-  (lambda (func sp)
-      (CreateSamplePairs (derivative func) sp)))
-;(CreateDerivativeGraphValues (lambda (x) (* x x)) (list 1 2 3)) ; => ((1.2)(2.4)(3.6))
+  (letrec ((derivative
+            (lambda (func dx)
+              (lambda (x)
+              (/ (- (func (+ x dx)) (func x)) dx)))))
+  (lambda (func dx sp)
+      (CreateSamplePairs (derivative func dx) sp))))
+;(CreateDerivativeGraphValues (lambda (x) (* x x)) 0.001 (list 1 2 3)) ; => ((1.2)(2.4)(3.6))
 
 (define CreateDerivativeFunctionSamplePairs
-  (lambda (func start stop CountOfPoints)
-    (CreateDerivativeGraphValues func (GenerateSamplePositions2 start stop CountOfPoints))))
-;(CreateDerivativeFunctionSamplePairs (lambda (x) (* x x)) 1 3 3) ; => ((1.2)(2.4)(3.6))
+  (lambda (func dx start stop countOfPoints)
+    (CreateDerivativeGraphValues func dx (GenerateSamplePositions start stop countOfPoints))))
+;(CreateDerivativeFunctionSamplePairs (lambda (x) (* x x)) 0.001 1 3 3 ) ; => ((1.2)(2.4)(3.6))
 
 ; The procedure "CreateIntegationGraphValues" takes a function, a start and stop value and a count of samples and
 ; returns the value of the integration of the function between start and stop with a number of samples
@@ -108,16 +94,29 @@
 ;Test
 ;(CreateIntegationGraphValues (lambda (x) (* x x)) 1 5 5000) ; => 41.3333
 
-; By with stop and moving to start it is possible to spare a step and thereby making it better
+; The procedure "CalculateIntegrationValue" takes a function, a start and stop value and a count of samples and
+; returns the value of the integration of the function between start and stop with a number of samples
+; "func" is the function to integrate
+; "start" is the start of the interval
+; "stop" is the stop of the interval
+; "CountOfPoints" is the number of x-values to generate in the interval
+; The inner procedure CalculateIntegrationValueRecursive takes a function, an interval, a start, a rectStart and an accumulator
+; and returns the integration of the function. It uses the rectangle method and starts backwards. So the "start" parameter is actually where it should stop.
+; "func" is the function to integrate
+; "interval" is the width of the rectangles based on the rectangle method.
+; "start" is the start of the x-values to integrate over
+; "rectStart" is where to start the current rectangle
+; "acc" is the accumulator.
+; http://www.mathcs.emory.edu/~cheung/Courses/170/Syllabus/07/rectangle-method.html
 (define CalculateIntegrationValue  
   (letrec ((CalculateIntegrationValueRecursive
-            (lambda (func interval start value acc)
-              (if (< value start)
+            (lambda (func interval start rectStart acc)
+              (if (< rectStart start)
                   acc
-                  (CalculateIntegrationValueRecursive func interval start (- value interval) (+ acc (* interval (func value))))))))
-  (lambda (func start stop CountOfSamples)
-    (let ((interval (Interval start stop CountOfSamples)))
+                  (CalculateIntegrationValueRecursive func interval start (- rectStart interval) (+ acc (* interval (func rectStart))))))))
+  (lambda (func start stop countOfPoints)
+    (let ((interval (Interval start stop countOfPoints)))
     (if (>= start stop)
         '()
         (CalculateIntegrationValueRecursive func interval start (- stop interval) 0))))))
-;(CalculateIntegrationValue (lambda (x) (* x x)) 1 5 10) ; => 41.3333
+(CalculateIntegrationValue (lambda (x) (* x x)) 1 5 5000) ; => 41.3333

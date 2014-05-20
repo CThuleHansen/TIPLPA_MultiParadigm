@@ -1,5 +1,5 @@
-﻿using IronScheme.Runtime;
-using IronScheme.Runtime.Typed;
+﻿using System.Collections.Generic;
+using IronScheme.Runtime;
 using SchemeLibrary.Loaders;
 
 namespace SchemeLibrary.Math.Implementation
@@ -13,21 +13,31 @@ namespace SchemeLibrary.Math.Implementation
             this.evaluator = evaluator;
         }
 
-        public Cons PlotFunction(string function, int xBegin, int xEnd, int noOfSamples)
+        public IEnumerable<KeyValuePair<double, double>> PlotFunction(string function, int xBegin, int xEnd, int noOfSamples)
         {
-            var samples = evaluator.Evaluate<Cons>("(GenerateSamplePositions {0} {1} {2})", xBegin, xEnd, noOfSamples);
-            var plotFunction = evaluator.Evaluate<Cons>("(CreateSamplePairs (lambda (x) (* x x)) '(1 2 3))");
-            return plotFunction;
+            var proc = string.Format("(CreateSamplePairs {0} (GenerateSamplePositions {1} {2} {3}))", function, xBegin, xEnd, noOfSamples);
+            //TODO: Somehow evaluate doesn't work with multi-args
+            var plots = evaluator.Evaluate<Cons>(proc);
+
+            return new List<KeyValuePair<double, double>>();
         }
 
-        public Cons PlotDerivative(string function, int xBegin, int xEnd, int noOfSamples)
+        public IEnumerable<KeyValuePair<double, double>> PlotDerivative(string function, int xBegin, int xEnd, int noOfSamples)
         {
             throw new System.NotImplementedException();
         }
 
-        public Cons PlotIntegral(string function, int xBegin, int xEnd, int noOfSamples)
+        public IEnumerable<KeyValuePair<double, double>> PlotIntegral(string function, int xBegin, int xEnd, int noOfSamples)
         {
             throw new System.NotImplementedException();
+        }
+
+        private IEnumerable<KeyValuePair<double, double>> ConvertToPair(Cons cons)
+        {
+            var result = new List<KeyValuePair<double, double>>();
+
+
+            return result;
         }
     }
 }

@@ -1,12 +1,12 @@
 ﻿using System;
-using IronScheme.Runtime;
+using System.Collections.Generic;
 
 namespace SchemeLibrary.Math
 {
     public interface IFunctionPlotter
     {
-        Cons PlotFunction(string function, Int32 xBegin, Int32 xEnd ,Int32 noOfSamples);
-        Cons PlotDerivative(string function, Int32 xBegin, Int32 xEnd, Int32 noOfSamples);
-        Cons PlotIntegral(string function, Int32 xBegin, Int32 xEnd, Int32 noOfSamples);
+        IEnumerable<KeyValuePair<double, double>> PlotFunction(string function, Int32 xBegin, Int32 xEnd ,Int32 noOfSamples);
+        IEnumerable<KeyValuePair<double, double>> PlotDerivative(string function, Int32 xBegin, Int32 xEnd, Int32 noOfSamples);
+        IEnumerable<KeyValuePair<double, double>> PlotIntegral(string function, Int32 xBegin, Int32 xEnd, Int32 noOfSamples);
     }
 }

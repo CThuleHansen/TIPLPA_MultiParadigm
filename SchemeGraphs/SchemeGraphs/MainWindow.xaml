@@ -2,19 +2,31 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit" x:Class="SchemeGraphs.MainWindow"
-    Title="Simple Scheme Embedding" Height="500" Width="640">
+    Title="Simple Scheme Embedding" Height="500" Width="800">
     <Grid>
-        <StackPanel>
-            <Label FontWeight="Bold" Content="Scheme Result:"/>
-            <TextBox x:Name="DisplayArea" Height="100" IsReadOnly="True"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0" Margin="0,-10,0,10">
             <Label FontWeight="Bold" Content="Input:"/>
-            <TextBox x:Name="Input" Height="100"/>
+            <TextBox x:Name="Input" Height="30"/>
+            <Label FontWeight="Bold" Content="X From:"/>
+            <TextBox x:Name="XFrom" Height="30"/>
+            <Label FontWeight="Bold" Content="X To:"/>
+            <TextBox x:Name="XTo" Height="30"/>
+            <Label FontWeight="Bold" Content="Eval points:"/>
+            <TextBox x:Name="NumberOfPoints" Height="30"/>
             <Button Click="Evaluate_Click" Content="Evaluate"/>
 
-            <chartingToolkit:Chart HorizontalAlignment="Left"  Name="lineChart" Title="Chart Title" VerticalAlignment="Top" Width="632" Height="197">
-                <chartingToolkit:LineSeries DependentValuePath="Value" IndependentValuePath="Key" ItemsSource="{Binding}" IsSelectionEnabled="True"/>                   
+            <Label FontWeight="Bold" Content="Scheme Result:"/>
+            <TextBox x:Name="DisplayArea" Height="30" IsReadOnly="True"/>
+
+        </StackPanel>
+        <StackPanel Grid.Column="1">
+            <chartingToolkit:Chart HorizontalAlignment="Left"  Name="lineChart" Title="Chart Title" VerticalAlignment="Top" Width="650" Height="450">
+                <chartingToolkit:LineSeries DependentValuePath="Value" IndependentValuePath="Key" ItemsSource="{Binding}" IsSelectionEnabled="True"/>
             </chartingToolkit:Chart>
         </StackPanel>
-        
     </Grid>
 </Window>

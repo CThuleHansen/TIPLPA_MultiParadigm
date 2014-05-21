@@ -34,7 +34,7 @@ namespace SchemeGraphs
         {
             ////TODO: Major changes - Can only work with integers, not symbols
             //DisplayArea.Text = evaluator.Evaluate<Int32>(Input.Text).ToString();
-            var plots = plotter.PlotFunction(Input.Text, 0, 5, 10);
+            var plots = plotter.PlotFunction(Input.Text, Convert.ToDouble(XFrom.Text), Convert.ToDouble(XTo.Text), Convert.ToInt16(NumberOfPoints.Text));
             lineChart.DataContext = plots;
         }
 

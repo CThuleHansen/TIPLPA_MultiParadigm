@@ -1,6 +1,10 @@
 (define Interval
   (lambda (start stop countOfPoints)
-    (exact->inexact (/ (- stop start) (- countOfPoints 1)))))
+    (if (> countOfPoints 1)
+        (exact->inexact (/ (- stop start) (- countOfPoints 1)))
+        (- stop start))))
+  
+  
 ; The procedure "GenerateSamplePositions" takes a start and stop value and a amount of sample points and
 ; returns a list of "sp" x-values equally spread out from start to stop.
 ; "start" is the start of the interval

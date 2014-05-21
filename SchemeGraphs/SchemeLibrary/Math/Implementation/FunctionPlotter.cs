@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using IronScheme.Runtime;
 using SchemeLibrary.Loaders;
 
@@ -35,13 +35,10 @@ namespace SchemeLibrary.Math.Implementation
 
         private IEnumerable<KeyValuePair<double, double>> ConvertToPair(Cons cons)
         {
-            var result = new List<KeyValuePair<double, double>>();
-            //TODO: Problem... cannot cast it to double always
-            foreach (Cons pair in cons)
-            {
-                result.Add(new KeyValuePair<double, double>((double) pair.car, (double) pair.cdr));
-            }
-            return result;
+            var pairs = (from Cons pair in cons 
+                         select new KeyValuePair<double, double>((double) pair.car, (double) pair.cdr));
+            
+            return pairs.ToList();
         }
     }
 }

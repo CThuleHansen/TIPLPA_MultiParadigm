@@ -22,7 +22,7 @@ namespace SchemeGraphs
             InitializeComponent();
 
             loader = new SchemeLoader();
-            loader.Import("Scheme.rkt");
+            loader.Import(@"..\..\..\..\Scheme\Scheme.rkt");
 
             evaluator = new ProxySchemeEvaluator();
             plotter = new FunctionPlotter(evaluator);

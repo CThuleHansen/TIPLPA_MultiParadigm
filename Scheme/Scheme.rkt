@@ -1,6 +1,6 @@
 (define Interval
   (lambda (start stop countOfPoints)
-    (/ (- stop start) (- countOfPoints 1))))
+    (exact->inexact (/ (- stop start) (- countOfPoints 1)))))
 ; The procedure "GenerateSamplePositions" takes a start and stop value and a amount of sample points and
 ; returns a list of "sp" x-values equally spread out from start to stop.
 ; "start" is the start of the interval
@@ -70,7 +70,7 @@
   (letrec ((derivative
             (lambda (func dx)
               (lambda (x)
-              (/ (- (func (+ x dx)) (func x)) dx)))))
+              (exact->inexact (/ (- (func (+ x dx)) (func x)) dx))))))
   (lambda (func dx sp)
       (CreateSamplePairs (derivative func dx) sp))))
 ;(CreateDerivativeGraphValues (lambda (x) (* x x)) 0.001 (list 1 2 3)) ; => ((1.2)(2.4)(3.6))

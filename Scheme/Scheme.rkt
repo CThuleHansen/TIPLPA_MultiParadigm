@@ -115,8 +115,13 @@
                   acc
                   (CalculateIntegrationValueRecursive func interval start (- rectStart interval) (+ acc (* interval (func rectStart))))))))
   (lambda (func start stop countOfPoints)
-    (let ((interval (Interval start stop countOfPoints)))
-    (if (>= start stop)
+    (let ((interval
+           (if (> countOfPoints 1)
+               (Interval start stop countOfPoints)
+               (- stop start))))
+    (if (or (>= start stop) (<= countOfPoints 0) )
         '()
         (CalculateIntegrationValueRecursive func interval start (- stop interval) 0))))))
 ;(CalculateIntegrationValue (lambda (x) (* x x)) 1 5 5000) ; => 41.3333
+
+(CalculateIntegrationValue (lambda (x) (* x x)) 1 5 1)

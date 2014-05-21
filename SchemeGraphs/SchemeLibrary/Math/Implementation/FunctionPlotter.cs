@@ -39,17 +39,7 @@ namespace SchemeLibrary.Math.Implementation
             //TODO: Problem... cannot cast it to double always
             foreach (Cons pair in cons)
             {
-                double x;
-                double y;
-                if (Double.TryParse(pair.car.ToString(), out x) && Double.TryParse(pair.cdr.ToString(), out y))
-                {
-                    result.Add(new KeyValuePair<double, double>(x, y));
-                }
-                else
-                {
-                    throw new InvalidCastException("Cannot parse cordinate to double");
-                }
-
+                result.Add(new KeyValuePair<double, double>((double) pair.car, (double) pair.cdr));
             }
             return result;
         }

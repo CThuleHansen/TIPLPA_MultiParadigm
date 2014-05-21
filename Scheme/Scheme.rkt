@@ -1,131 +1,119 @@
-(define Interval
-  (lambda (start stop countOfPoints)
-    (if (> countOfPoints 1)
-        (exact->inexact (/ (- stop start) (- countOfPoints 1)))
-        (- stop start))))
-  
-  
-; The procedure "GenerateSamplePositions" takes a start and stop value and a amount of sample points and
-; returns a list of "sp" x-values equally spread out from start to stop.
-; "start" is the start of the interval
-; "stop" is the stop of the interval
-; "CountOfPoints" is the number of x-values to generate in the interval
-(define GenerateSamplePositions
-  (letrec ((GeneratePositions
+; The procedure "CalcSamples" takes a start and stop value and a amount of sample points and
+; returns a list of "sp" x-values equally spread out from start to stop. 
+; Special cases:
+;   <= 2 sample points in a interval where start does not equal stop returns '() - otherwise as stated in the description above.
+;   >= 1 sample point in an interval where start equals stop returns a list with the start/stop point - otherwise '()
+; For examples of usage see the tests below the procedure.
+(define CalcSamples
+  (letrec ((CalcSamplesRec
             (lambda (interval acc start value)
             (if (< value start)
                 acc
-                (GeneratePositions interval (cons value acc) start (- value interval))))))
-  (lambda (start stop countOfPoints)
-    (let ((interval (Interval start stop countOfPoints)))
-    (if (<= stop start)
-         '()
-        (GeneratePositions interval '() start stop))))))
-;(GenerateSamplePositions 1 5 5) ; => 1 2 3 4 5
-;(GenerateSamplePositions 0 5 6) ; => 0 1 2 3 4 5
-;(GenerateSamplePositions 10 20 11) ; => 10 11 12 13 14 15 16 17 18 19 20
-;(GenerateSamplePositions 0 1/2 6) ; => 0 0.1 0.2 0.3 0.4 0.5
+                (CalcSamplesRec interval (cons value acc) start (- value interval))))))
+    (let ((Interval
+              (lambda (start stop samples)
+                (if (> samples 1)
+                    (exact->inexact (/ (- stop start) (- samples 1)))
+                    (- stop start)))))
+  (lambda (start stop samples)
+    (let ((interval (Interval start stop samples)))
+      (if (and (equal? start stop) (>= samples 1))
+          (list start)
+          (if (and (> stop start) (>= samples 2))
+              (CalcSamplesRec interval '() start stop)
+              '())))))))
+; Tests
+;(CalcSamples 1 5 -1); '()
+;(CalcSamples 1 5 0); => '()
+;(CalcSamples 1 5 1); => '() 
+;(CalcSamples 1 1 1); => (1)
+;(CalcSamples 1 1 50); => (1)
+;(CalcSamples 1 1 0); => '()
+;(CalcSamples 1 5 2); => (1 5)
+;(CalcSamples 1 5 5) ; => (1 2 3 4 5)
 
-;zip takes two lists and returns a single list, where each element is a pair of an element i from both lists.
-(define zip
+; The procedure Zip takes two lists and returns a single list where each element is a pair of corresponding elements from the two lists.
+; For examples of usage see the tests below the procedure.
+(define Zip
   (letrec
-      ((innerzip
+      ((ZipRec
         (lambda (lst1 lst2 acc)
           (if (or (null? lst1) (null? lst2))
               acc
-              (innerzip (cdr lst1) (cdr lst2) (cons (cons (car lst1) (car lst2)) acc))
+              (ZipRec (cdr lst1) (cdr lst2) (cons (cons (car lst1) (car lst2)) acc))
           ))))
   (lambda (lst1 lst2)
-    (reverse (innerzip lst1 lst2 '())))))
+    (reverse (ZipRec lst1 lst2 '())))))
+; Tests
+;(Zip '(1 2 3) '(a b c)); => ((1.a)(2.b)(3.c))
+;(Zip '(1 2) '(a b c)); => ((1.a)(2.b))
+;(Zip '(1 2 3) '(a b)); => ((1.a)(2.b))
 
-; The procedure "CreateSamplePairs" takes a function and a list of sample positions and returns a list of pairs with x and f(x)-values
-; "func" is the function used to generate the f(x)-values from the x-values
-; "sp" is the sample positions which is the x-values to base the f(x)-values on.
-(define CreateSamplePairs
-  (letrec ((CreatePairs
-            (lambda (func acc sp)
-              (if (null? sp)
-                  acc
-                  (CreatePairs func (cons (func (car sp)) acc) (cdr sp))))))
-  (lambda (func sp)
-    (zip sp (reverse (CreatePairs func '() sp))))))
-;(CreateSamplePairs (lambda (x) (* x x)) (list 1 2 3)) ; => ((1.1) (2.4) (3.9))
+; The procedure "CalcFuncPairs" uses the procedure "CalcSamples" to generate the x-values
+; and the uses the parameter func to generate the corresponding f(x)-values.
+; For examples of usage see the tests below the procedure.
+(define CalcFuncPairs
+            (letrec ((CalcFuncVal
+                      (lambda (func acc sp)
+                        (if (null? sp)
+                            acc
+                            (CalcFuncVal func (cons (func (car sp)) acc) (cdr sp))))))
+    (lambda (func start stop samples)
+      (let ((sp (CalcSamples start stop samples)))
+      (Zip sp (CalcFuncVal func '() sp))))))
+; Tests
+;(CalcFuncPairs (lambda (x) (* x x)) 1 3 -1); => '()
+;(CalcFuncPairs (lambda (x) (* x x)) 1 3 0); => '()
+;(CalcFuncPairs (lambda (x) (* x x)) 1 3 1); => '()
+;(CalcFuncPairs (lambda (x) (* x x)) 1 1 0); => '()
+;(CalcFuncPairs (lambda (x) (* x x)) 1 1 1); => ((1 . 1))
+;(CalcFuncPairs (lambda (x) (* x x)) 1 1 50); => ((1 . 1))
+;(CalcFuncPairs (lambda (x) (* x x)) 1 3 2); => ((1.1) (3.9))
+;(CalcFuncPairs (lambda (x) (* x x)) 1 3 3); => ((1 . 1) (2 . 4) (3 . 9))
 
-; The procedure "CreateFunctionSamplePairs" wraps the procedure "CreateSamplePairs". It takes a func, a start and stop value and a amount of sample points and
-; returns a list of corresponding x and f(x) pairs.
-; "func" is the function used to generate the f(x)-values from the x-values
-; "start" is the start of the interval
-; "stop" is the stop of the interval
-; "CountOfPoints" is the number of x-values to generate in the interval
-(define CreateFunctionSamplePairs
-  (lambda (func start stop countOfPoints)
-    (CreateSamplePairs func (GenerateSamplePositions start stop countOfPoints))))
-;(CreateFunctionSamplePairs (lambda (x) (* x x)) 1 3 3); => ((1.1) (2.4) (3.9))
-
-; The procedure "CreateDerivativeGraphValues" takes a function and a list of sample points
-; and returns a list of pairs with x and f'(x)-values
-; "func" is the function to create the derivative function from
-; "sp" is the sample positions to base the f'(x)-values on.
-; The inner procedure "derivative" takes a function and returns the derived function.
-; "func" is the function to create the derived function from
-; "dx" is a measure of deltax going to zero
-; http://www.mathsisfun.com/calculus/derivatives-introduction.html
-(define CreateDerivativeGraphValues
+; The procedure "CalcDeriFuncPairs" calculates the derived function of the parameter "func" and then passes
+; it to the function CalcFuncPairs to generate pairs of x-values and corresponding f'(x) values.
+; dx is a infinitesimal and should head towards 0. The smaller the value of dx is the better.
+; For examples of usage see the tests below the procedure.
+(define CalcDeriFuncPairs
   (letrec ((derivative
             (lambda (func dx)
               (lambda (x)
               (exact->inexact (/ (- (func (+ x dx)) (func x)) dx))))))
-  (lambda (func dx sp)
-      (CreateSamplePairs (derivative func dx) sp))))
-;(CreateDerivativeGraphValues (lambda (x) (* x x)) 0.001 (list 1 2 3)) ; => ((1.2)(2.4)(3.6))
-
-(define CreateDerivativeFunctionSamplePairs
-  (lambda (func dx start stop countOfPoints)
-    (CreateDerivativeGraphValues func dx (GenerateSamplePositions start stop countOfPoints))))
-;(CreateDerivativeFunctionSamplePairs (lambda (x) (* x x)) 0.001 1 3 3 ) ; => ((1.2)(2.4)(3.6))
-
-; The procedure "CreateIntegationGraphValues" takes a function, a start and stop value and a count of samples and
-; returns the value of the integration of the function between start and stop with a number of samples
-;http://www.mathcs.emory.edu/~cheung/Courses/170/Syllabus/07/rectangle-method.html
-(define CreateIntegationGraphValues
-  (letrec ((CreateIntegrationGraphValuesRec
-            (lambda (sp interval acc)
-              (if(null? (cdr sp))
-                 acc
-                 (CreateIntegrationGraphValuesRec (cdr sp) interval (+ acc (* interval (cdr (car sp))))))))) 
-  (lambda (func start stop s)
-    (CreateIntegrationGraphValuesRec (CreateSamplePairs func (GenerateSamplePositions start stop s)) (Interval start stop s)  0))))
-;Test
-;(CreateIntegationGraphValues (lambda (x) (* x x)) 1 5 5000) ; => 41.3333
-
-; The procedure "CalculateIntegrationValue" takes a function, a start and stop value and a count of samples and
-; returns the value of the integration of the function between start and stop with a number of samples
-; "func" is the function to integrate
-; "start" is the start of the interval
-; "stop" is the stop of the interval
-; "CountOfPoints" is the number of x-values to generate in the interval
-; The inner procedure CalculateIntegrationValueRecursive takes a function, an interval, a start, a rectStart and an accumulator
-; and returns the integration of the function. It uses the rectangle method and starts backwards. So the "start" parameter is actually where it should stop.
-; "func" is the function to integrate
-; "interval" is the width of the rectangles based on the rectangle method.
-; "start" is the start of the x-values to integrate over
-; "rectStart" is where to start the current rectangle
-; "acc" is the accumulator.
-; http://www.mathcs.emory.edu/~cheung/Courses/170/Syllabus/07/rectangle-method.html
-(define CalculateIntegrationValue  
-  (letrec ((CalculateIntegrationValueRecursive
-            (lambda (func interval start rectStart acc)
-              (if (< rectStart start)
-                  acc
-                  (CalculateIntegrationValueRecursive func interval start (- rectStart interval) (+ acc (* interval (func rectStart))))))))
-  (lambda (func start stop countOfPoints)
-    (let ((interval
-           (if (> countOfPoints 1)
-               (Interval start stop countOfPoints)
-               (- stop start))))
-    (if (or (>= start stop) (<= countOfPoints 0) )
+  (lambda (func dx start stop samples)
+    (if (equal? dx 0)
         '()
-        (CalculateIntegrationValueRecursive func interval start (- stop interval) 0))))))
-;(CalculateIntegrationValue (lambda (x) (* x x)) 1 5 5000) ; => 41.3333
+        (CalcFuncPairs (derivative func dx) start stop samples)))))
 
-(CalculateIntegrationValue (lambda (x) (* x x)) 1 5 1)
+; Tests. The procedure "CalcFuncPairs" has already been tested further up and therefore it is not necessary to test so many cases.
+;(CalcDeriFuncPairs (lambda (x) (* x x)) 0.001 1 3 3) ; => ((1 . 2)(2.4)(3.6))
+;(CalcDeriFuncPairs (lambda (x) (* x x)) -0.001 1 3 3) ; => ((1 . 2)(2.4)(3.6))
+;(CalcDeriFuncPairs (lambda (x) (* x x)) 0 1 3 3) ; => '()
+
+; The procedure "CalcInt" calcuates an approxmiation of the definite integralof a function over an interval.
+; CalcFuncPairs is used to calculate the start of the rectangles and the height of the rectangles.
+; For examples of usage see the tests below the procedure.
+(define CalcInt
+  (let ((CalcRectWidth
+         (lambda (start stop countOfRect)
+           (/ (- stop start) countOfRect))))
+    (letrec ((calcIntVal
+              (lambda (fsp width acc)
+                (if (null? fsp)
+                    acc
+                    (calcIntVal (cdr fsp) width (+ acc (* width (cdr (car fsp)))))))))
+    (lambda (func start stop rect)
+      (if (and (>= stop start) (> rect 0))
+          (calcIntVal (CalcFuncPairs func start (- stop (CalcRectWidth start stop rect)) rect) (CalcRectWidth start stop rect) 0)
+          '())))))
+; Tests   
+;(CalcInt (lambda (x) (* x x)) 1 1 -1); => '()
+;(CalcInt (lambda (x) (* x x)) 1 5 0); => '()
+;(CalcInt (lambda (x) (* x x)) 1 1 1); => 0
+;(CalcInt (lambda (x) (* x x)) 1 1 2); => 0
+;(CalcInt (lambda (x) (* x x)) 1 5 1); => 4 because the function x*x has a height of 1^2=1 and a width of 5-1=4 with 1 rectangle.
+;(CalcInt (lambda (x) (* x x)) 1 5 2); => 20 because the function x*x has 2 rectangles. 
+; 1 rectangle at x=1 with height: 1*1=1 and width: 3-1=2 which gives the area: 1*2 = 2
+; 1 rectangle at x=3 width height: 3*3=9 and width: 5-3=2 which gives the area: 9*2 = 18
+; Total: 2+18 = 20.
+;(CalcInt (lambda (x) (* x x)) 1 5 5000); => 124/3 ~= 41.3333... Increasing the amount of rectangles brings the result closer to 124/3

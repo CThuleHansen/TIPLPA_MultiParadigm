@@ -1,0 +1,30 @@
+﻿<Window x:Class="SchemeGraphv2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+        Title="SchemeGraph v2" Height="350" Width="525" MinWidth="525">
+    <StackPanel Orientation="Vertical">
+        <Label Content="Controls" />
+        <StackPanel Orientation="Horizontal">
+            <Label Content="X start:" />
+            <TextBox Name="tb_xBegin"  Width="40" Height="18" />
+            <Label Content="X end:" />
+            <TextBox Name="tb_xEnd" Width="40" Height="18" />
+            <Label Content="Number of points:" />
+            <TextBox Name="tb_noOfPoints"  Width="45" Height="18" Margin="0,0,10,0" />
+            <StackPanel Orientation="Vertical">
+                <CheckBox Name="plotDerivative"  Content="Derrivative" />
+                <CheckBox Name="plotIntegral" Content="Integral" IsEnabled="False" />
+            </StackPanel>
+        </StackPanel>
+        <Label Content="Function" />
+        <TextBox Name="tb_function" Height="64"/>
+        
+        <Button Width="140" Content="Evaluate" HorizontalAlignment="Left" />
+
+        <chartingToolkit:Chart>
+            
+        </chartingToolkit:Chart>
+        
+    </StackPanel>
+</Window>

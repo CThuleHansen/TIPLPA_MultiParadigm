@@ -20,7 +20,7 @@ namespace SchemeLibrary.Console.Test
             var result = evaluator.Evaluate<Int32>("(increment {0})",5);
             System.Console.WriteLine("The result is: {0}", result);
             var plotter = new FunctionPlotter(evaluator);
-            var result2 = plotter.PlotFunction("(lambda (x) (* x x))", 1, 3, 3);
+            var result2 = plotter.PlotFunction("(lambda (x) (* x x))", 1.6, 11.2, 10);
 
 
             System.Console.ReadLine();

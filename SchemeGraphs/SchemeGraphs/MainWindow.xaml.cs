@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using SchemeLibrary.Loaders;
 using SchemeLibrary.Loaders.Implementation;
+using SchemeLibrary.Math;
+using SchemeLibrary.Math.Implementation;
 
 
 namespace SchemeGraphs
@@ -11,18 +14,28 @@ namespace SchemeGraphs
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ProxySchemeEvaluator _proxySchemeHandler;
+        private ISchemeEvaluator evaluator;
+        private ISchemeLoader loader;
+        private IFunctionPlotter plotter;
         public MainWindow()
         {
             InitializeComponent();
-            _proxySchemeHandler = new ProxySchemeEvaluator();
+
+            loader = new SchemeLoader();
+            loader.Import("Scheme.rkt");
+
+            evaluator = new ProxySchemeEvaluator();
+            plotter = new FunctionPlotter(evaluator);
+            
             showColumnChart();
         }
 
         private void Evaluate_Click(object sender, RoutedEventArgs e)
         {
-            //TODO: Major changes - Can only work with integers, not symbols
-            DisplayArea.Text = _proxySchemeHandler.Evaluate<Int32>(Input.Text).ToString();
+            ////TODO: Major changes - Can only work with integers, not symbols
+            //DisplayArea.Text = evaluator.Evaluate<Int32>(Input.Text).ToString();
+            var plots = plotter.PlotFunction(Input.Text, 0, 5, 10);
+            lineChart.DataContext = plots;
         }
 
         private void showColumnChart()

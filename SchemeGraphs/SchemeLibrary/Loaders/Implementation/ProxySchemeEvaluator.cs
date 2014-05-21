@@ -1,4 +1,6 @@
-﻿namespace SchemeLibrary.Loaders.Implementation
+﻿using System.Linq;
+
+namespace SchemeLibrary.Loaders.Implementation
 {
     /// <summary>
     /// This class is serves as a proxy for the IronScheme evaluation of scheme. 

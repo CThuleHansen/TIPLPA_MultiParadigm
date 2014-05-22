@@ -60,7 +60,7 @@
                             (CalcFuncVal func (cons (func (car sp)) acc) (cdr sp))))))
     (lambda (func start stop samples)
       (let ((sp (CalcSamples start stop samples)))
-      (Zip sp (CalcFuncVal func '() sp))))))
+      (Zip sp (reverse (CalcFuncVal func '() sp)))))))
 ; Tests
 ;(CalcFuncPairs (lambda (x) (* x x)) 1 3 -1); => '()
 ;(CalcFuncPairs (lambda (x) (* x x)) 1 3 0); => '()

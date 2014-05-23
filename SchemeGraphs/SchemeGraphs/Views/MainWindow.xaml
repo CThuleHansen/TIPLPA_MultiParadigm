@@ -25,8 +25,8 @@
             <CheckBox Content="Integral" IsEnabled="False"></CheckBox>
             
             <Label Content="Scale:"></Label>
-            <RadioButton GroupName="rb_scale" Content="Linear" IsChecked="True"></RadioButton>
-            <RadioButton GroupName="rb_scale" Content="Log10"></RadioButton>
+            <RadioButton Name="rb_linear" GroupName="rb_scale" Content="Linear" IsChecked="True"></RadioButton>
+            <RadioButton Name="rb_log" GroupName="rb_scale" Content="Log10"></RadioButton>
 
             <Button Click="Evaluate_Click" Content="Draw"/>
             <Button Content="Clear"></Button>

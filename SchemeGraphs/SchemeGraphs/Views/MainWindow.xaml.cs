@@ -50,6 +50,8 @@ namespace SchemeGraphs
                 var samples = Int32.Parse(tb_samples.Text);
                 var plots = plotter.PlotFunction(tb_function.Text, xBegin, xEnd, samples);
 
+              
+
                 chart.AddLineSeries("Example 1",plots);
             }
             catch (Exception ex)

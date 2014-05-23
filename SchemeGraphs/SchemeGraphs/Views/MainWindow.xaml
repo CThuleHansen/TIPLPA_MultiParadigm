@@ -6,10 +6,10 @@
     Title="Simple Scheme Embedding" Height="500" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="193"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0" Margin="10,0">
+        <StackPanel Grid.Column="0" Margin="10,0,1,0">
             <Label FontWeight="Bold" Content="Function:"/>
             <TextBox x:Name="tb_function" Height="36" />
             <Label FontWeight="Bold" Content="X From:"/>
@@ -20,21 +20,21 @@
             <TextBox x:Name="tb_dx"></TextBox>
             <Label FontWeight="Bold" Content="Samples:"/>
             <TextBox x:Name="tb_samples" Height="18"/>
-            
+
             <CheckBox Content="Derrivative"></CheckBox>
             <CheckBox Content="Integral" IsEnabled="False"></CheckBox>
-            
+
             <Label Content="Scale:"></Label>
             <RadioButton Name="rb_linear" GroupName="rb_scale" Content="Linear" IsChecked="True"></RadioButton>
             <RadioButton Name="rb_log" GroupName="rb_scale" Content="Log10"></RadioButton>
 
             <Button Click="Evaluate_Click" Content="Draw"/>
             <Button Content="Clear"></Button>
-            
+
             <Label FontWeight="Bold" Content="Output:"/>
-            <TextBox x:Name="tb_output" Height="30" IsReadOnly="True"/>
+            <TextBox x:Name="tb_output" Height="76" IsReadOnly="True"/>
 
         </StackPanel>
-        <oxy:PlotView Model="{Binding MyModel}" Grid.Column="1"/>
+        <oxy:PlotView Model="{Binding MyModel}" Grid.Column="1" Margin="67,0,0,0"/>
     </Grid>
 </Window>

@@ -11,15 +11,15 @@
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" Margin="10,0,1,0">
             <Label FontWeight="Bold" Content="Function:"/>
-            <TextBox x:Name="tb_function" Height="36" />
+            <TextBox x:Name="tb_function" Text="(lambda (x) (* x x))" Height="36" />
             <Label FontWeight="Bold" Content="X From:"/>
-            <TextBox x:Name="tb_xfrom" Height="18"/>
+            <TextBox x:Name="tb_xfrom" Text="1" Height="18"/>
             <Label FontWeight="Bold" Content="X To:"/>
-            <TextBox x:Name="tb_xto" Height="18"/>
+            <TextBox x:Name="tb_xto" Text="5" Height="18"/>
             <Label FontWeight="Bold" Content="Dx:"></Label>
             <TextBox x:Name="tb_dx"></TextBox>
             <Label FontWeight="Bold" Content="Samples:"/>
-            <TextBox x:Name="tb_samples" Height="18"/>
+            <TextBox x:Name="tb_samples" Text="5" Height="18"/>
 
             <CheckBox Content="Derrivative"></CheckBox>
             <CheckBox Content="Integral" IsEnabled="False"></CheckBox>
@@ -29,7 +29,7 @@
             <RadioButton Name="rb_log" GroupName="rb_scale" Content="Log10"></RadioButton>
 
             <Button Click="Evaluate_Click" Content="Draw"/>
-            <Button Content="Clear"></Button>
+            <Button Content="Clear" Click="Clear_Click"></Button>
 
             <Label FontWeight="Bold" Content="Output:"/>
             <TextBox x:Name="tb_output" Height="76" IsReadOnly="True"/>

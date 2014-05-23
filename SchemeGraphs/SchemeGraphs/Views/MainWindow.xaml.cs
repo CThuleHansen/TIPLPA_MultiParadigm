@@ -66,5 +66,10 @@ namespace SchemeGraphs
                 tb_output.AppendText(ex.Message);
             }
         }
+
+        private void Clear_Click(object sender, RoutedEventArgs e)
+        {
+            chart.Clear();
+        }
     }
 }

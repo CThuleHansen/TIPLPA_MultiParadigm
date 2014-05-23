@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
@@ -8,19 +9,28 @@ namespace SchemeGraphs.Graph.Implementation
     public class ChartAdapter : IChart
     {
         private readonly PlotModel model;
-        private Dictionary<string,LineSeries> lineSeries; 
+        private Dictionary<string, LineSeries> lineSeries;
+        private List<Dictionary<string, LineSeries>> dataSourceList;
 
         public ChartAdapter(PlotModel model)
         {
             this.model = model;
             lineSeries = new Dictionary<string, LineSeries>();
+            dataSourceList = new List<Dictionary<string, LineSeries>>();
         }
 
-        public void AddLineSeries(string name, IEnumerable<KeyValuePair<double, double>> points)
+        public void AddLineSeries(string name, IEnumerable<KeyValuePair<double, double>> points, bool log)
         {
-            lineSeries.Add(name,ToLineSeries(points));
+            
+            
+            dataSourceList.Add(lineSeries);
+            var lastSeries = (from p in dataSourceList
+                              select p).Last();
+
+            lastSeries.Add(name, ToLineSeries(points));
             Validate();
-            this.model.InvalidatePlot(true);
+
+            lineSeries = new Dictionary<string, LineSeries>();
         }
 
         public void AddIntegralBoxes(string name)
@@ -50,7 +60,10 @@ namespace SchemeGraphs.Graph.Implementation
 
         public void Clear()
         {
-            lineSeries.Clear();
+            foreach (var item in dataSourceList)
+            {
+                item.Clear();
+            }
             Validate();
         }
 
@@ -58,11 +71,14 @@ namespace SchemeGraphs.Graph.Implementation
         {
             model.Series.Clear();
 
-
-            foreach (var series in lineSeries)
+            foreach (var item in dataSourceList)
             {
-                model.Series.Add(series.Value);
+                foreach (var series in item)
+                {
+                    model.Series.Add(series.Value);
+                }
             }
+            this.model.InvalidatePlot(true);
         }
 
         private LineSeries ToLineSeries(IEnumerable<KeyValuePair<double, double>> points)
@@ -70,7 +86,7 @@ namespace SchemeGraphs.Graph.Implementation
             var result = new LineSeries();
             foreach (var pair in points)
             {
-                result.Points.Add(new DataPoint(pair.Key,pair.Value));
+                result.Points.Add(new DataPoint(pair.Key, pair.Value));
             }
             return result;
         }

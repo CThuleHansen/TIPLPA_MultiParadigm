@@ -50,7 +50,14 @@ namespace SchemeGraphs
                 var samples = Int32.Parse(tb_samples.Text);
                 var plots = plotter.PlotFunction(tb_function.Text, xBegin, xEnd, samples);
 
-              
+                if (true == rb_linear.IsChecked)
+                {
+                    //TODO add changing the graph.
+                }
+                else
+                {
+                    
+                }
 
                 chart.AddLineSeries("Example 1",plots);
             }

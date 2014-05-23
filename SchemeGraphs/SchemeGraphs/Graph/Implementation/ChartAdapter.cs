@@ -20,6 +20,7 @@ namespace SchemeGraphs.Graph.Implementation
         {
             lineSeries.Add(name,ToLineSeries(points));
             Validate();
+            this.model.InvalidatePlot(true);
         }
 
         public void AddIntegralBoxes(string name)
@@ -44,6 +45,7 @@ namespace SchemeGraphs.Graph.Implementation
             //TODO: set focus of the axis so you can see the plots
             model.Axes.Clear();
             model.Axes.Add(new LinearAxis());
+
         }
 
         public void Clear()

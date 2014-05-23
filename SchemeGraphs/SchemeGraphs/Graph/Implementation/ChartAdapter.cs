@@ -19,7 +19,7 @@ namespace SchemeGraphs.Graph.Implementation
             dataSourceList = new List<Dictionary<string, LineSeries>>();
         }
 
-        public void AddLineSeries(string name, IEnumerable<KeyValuePair<double, double>> points, bool log)
+        public void AddLineSeries(string name, IEnumerable<KeyValuePair<double, double>> points)
         {
             
             

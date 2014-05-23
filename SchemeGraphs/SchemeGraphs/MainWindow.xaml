@@ -1,7 +1,9 @@
 ﻿<Window
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit" x:Class="SchemeGraphs.MainWindow"
+    xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+    xmlns:oxy="http://oxyplot.codeplex.com"
+    x:Class="SchemeGraphs.MainWindow"
     Title="Simple Scheme Embedding" Height="500" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -23,10 +25,6 @@
             <TextBox x:Name="DisplayArea" Height="30" IsReadOnly="True"/>
 
         </StackPanel>
-        <StackPanel Grid.Column="1">
-            <chartingToolkit:Chart HorizontalAlignment="Left"  Name="lineChart" Title="Chart Title" VerticalAlignment="Top" Width="650" Height="450">
-                <chartingToolkit:LineSeries DependentValuePath="Value" IndependentValuePath="Key" ItemsSource="{Binding}" IsSelectionEnabled="True"/>
-            </chartingToolkit:Chart>
-        </StackPanel>
+        <oxy:PlotView Model="{Binding MyModel}" Grid.Column="1"/>
     </Grid>
 </Window>

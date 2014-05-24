@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows;
 using OxyPlot;
-using OxyPlot.Axes;
-using OxyPlot.Series;
 using SchemeGraphs.Graph;
 using SchemeGraphs.Graph.Implementation;
 using SchemeLibrary.Loaders;
@@ -11,8 +8,7 @@ using SchemeLibrary.Loaders.Implementation;
 using SchemeLibrary.Math;
 using SchemeLibrary.Math.Implementation;
 
-
-namespace SchemeGraphs
+namespace SchemeGraphs.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -41,7 +37,7 @@ namespace SchemeGraphs
             chart.SetLinearScale(AxisProperty.Both);
         }
 
-        private void Evaluate_Click(object sender, RoutedEventArgs e)
+        private void EvaluateClick(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -49,15 +45,6 @@ namespace SchemeGraphs
                 var xEnd = Double.Parse(tb_xto.Text);
                 var samples = Int32.Parse(tb_samples.Text);
                 var plots = plotter.PlotFunction(tb_function.Text, xBegin, xEnd, samples);
-
-                if (true == rb_linear.IsChecked)
-                {
-                    //TODO add changing the graph.
-                }
-                else
-                {
-                    
-                }
 
                 chart.AddLineSeries("Example 1",plots);
             }
@@ -67,9 +54,22 @@ namespace SchemeGraphs
             }
         }
 
-        private void Clear_Click(object sender, RoutedEventArgs e)
+        private void ClearClick(object sender, RoutedEventArgs e)
         {
             chart.Clear();
+            tb_output.Text = string.Empty;
+        }
+
+        private void CbLinearChecked(object sender, RoutedEventArgs e)
+        {
+            if (chart != null) 
+                chart.SetLinearScale(AxisProperty.Both);
+        }
+
+        private void CbLogChecked(object sender, RoutedEventArgs e)
+        {
+            if (chart != null) 
+                chart.SetLogrithmicScale(AxisProperty.Both);
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
@@ -9,28 +8,18 @@ namespace SchemeGraphs.Graph.Implementation
     public class ChartAdapter : IChart
     {
         private readonly PlotModel model;
-        private Dictionary<string, LineSeries> lineSeries;
-        private List<Dictionary<string, LineSeries>> dataSourceList;
+        private readonly Dictionary<string, LineSeries> lineSeries;
 
         public ChartAdapter(PlotModel model)
         {
             this.model = model;
             lineSeries = new Dictionary<string, LineSeries>();
-            dataSourceList = new List<Dictionary<string, LineSeries>>();
         }
 
         public void AddLineSeries(string name, IEnumerable<KeyValuePair<double, double>> points)
         {
-            
-            
-            dataSourceList.Add(lineSeries);
-            var lastSeries = (from p in dataSourceList
-                              select p).Last();
-
-            lastSeries.Add(name, ToLineSeries(points));
+            lineSeries.Add(name, ToLineSeries(points));
             Validate();
-
-            lineSeries = new Dictionary<string, LineSeries>();
         }
 
         public void AddIntegralBoxes(string name)
@@ -47,23 +36,34 @@ namespace SchemeGraphs.Graph.Implementation
         public void SetLogrithmicScale(AxisProperty axis)
         {
             model.Axes.Clear();
-            model.Axes.Add(new LogarithmicAxis());
+            if (axis == AxisProperty.Y || axis == AxisProperty.Both)
+            {
+                model.Axes.Add(new LogarithmicAxis { Position = AxisPosition.Left, IsZoomEnabled = false});
+            }
+            if (axis == AxisProperty.X || axis == AxisProperty.Both)
+            {
+                model.Axes.Add(new LogarithmicAxis { Position = AxisPosition.Bottom, IsZoomEnabled = false });
+            }
+            Validate();
         }
 
         public void SetLinearScale(AxisProperty axis)
         {
-            //TODO: set focus of the axis so you can see the plots
             model.Axes.Clear();
-            model.Axes.Add(new LinearAxis());
-
+            if (axis == AxisProperty.Y || axis == AxisProperty.Both)
+            {
+                model.Axes.Add(new LinearAxis { Position = AxisPosition.Left, IsZoomEnabled = false});
+            }
+            if (axis == AxisProperty.X || axis == AxisProperty.Both)
+            {
+                model.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, IsZoomEnabled = false });
+            }
+            Validate();
         }
 
         public void Clear()
         {
-            foreach (var item in dataSourceList)
-            {
-                item.Clear();
-            }
+            lineSeries.Clear();
             Validate();
         }
 
@@ -71,12 +71,9 @@ namespace SchemeGraphs.Graph.Implementation
         {
             model.Series.Clear();
 
-            foreach (var item in dataSourceList)
+            foreach (var item in lineSeries)
             {
-                foreach (var series in item)
-                {
-                    model.Series.Add(series.Value);
-                }
+                model.Series.Add(item.Value);
             }
             this.model.InvalidatePlot(true);
         }

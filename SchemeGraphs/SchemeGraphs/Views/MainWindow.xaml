@@ -7,55 +7,64 @@
     <StackPanel Orientation="Vertical">
         <Grid>
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0" Margin="10,0,10,0">
-                <Label FontWeight="Bold" Content="Function:"/>
-                <TextBox x:Name="tb_function" Text="(lambda (x) (* x x))" Height="36" />
-                
-                <StackPanel Orientation="Horizontal">
-                    <Label Content="Name:"></Label>
-                    <TextBox Name="tb_name" Width="80" Height="18" FontSize="9" Text="Example 1"></TextBox>
-                </StackPanel>
-                
-                <StackPanel Orientation="Horizontal">
-                    <Label FontWeight="Bold" Content="X min:"/>
-                    <TextBox x:Name="tb_xfrom" Text="1" Height="18" Width="28" FontSize="10"/>
-                    <Label FontWeight="Bold" Content="max:"/>
-                    <TextBox x:Name="tb_xto" Text="5" Height="18" Width="28" FontSize="10"/>
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal">
-                    <Label FontWeight="Bold" Content="Y min:"/>
-                    <TextBox x:Name="tb_yfrom" Height="18" Width="28" FontSize="10"/>
-                    <Label FontWeight="Bold" Content="max:"/>
-                    <TextBox x:Name="tb_yto" Height="18" Width="28" FontSize="10"/>
-                </StackPanel>
-                
-                <StackPanel Orientation="Horizontal">
-                    <Label FontWeight="Bold" Content="Dx:"></Label>
-                    <TextBox x:Name="tb_dx" Height="18" Width="86" FontSize="10" Text="0,0000001"></TextBox>
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal">
-                    <Label FontWeight="Bold" Content="Samples:"/>
-                    <TextBox x:Name="tb_samples" Text="5" Width="28" Height="18" FontSize="10"/>
-                </StackPanel>
-
-                <Label Content="Calucations:" FontWeight="Bold" Margin="0,4,0,0" ></Label>
-                <CheckBox Content="Derivative" Checked="AddDerivativeChecked" Unchecked="RemoveDerivative"></CheckBox>
-                <CheckBox Content="Integral" IsEnabled="False"></CheckBox>
+            
+            <StackPanel Orientation="Vertical">
+                <Label Content="Lineseries:" FontWeight="Bold"></Label>
+                <ListView  ItemsSource="{Binding ModelViewCollection, Mode=TwoWay}" SelectedItem="{Binding CurrentModel, Mode=TwoWay}" MinHeight="200" SelectionChanged="Selector_OnSelectionChanged" >
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <Label Content="{Binding Path=Name}"></Label>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
 
                 <Label Content="Scale:" FontWeight="Bold" Margin="0,4,0,0"></Label>
                 <RadioButton GroupName="rb_scale" Content="Linear" IsChecked="True" Checked="CbLinearChecked"></RadioButton>
                 <RadioButton GroupName="rb_scale" Content="Log10" Checked="CbLogChecked" ></RadioButton>
 
-                <Button Click="EvaluateClick" Content="Draw"/>
-                <Button Content="Clear" Click="ClearClick"></Button>
+                <Button Click="AddLineSeries" Content="Add Lineseries"/>
+                <Button Content="Clear" Click="ClearClick" VerticalAlignment="Bottom"></Button>
             </StackPanel>
             
-            <oxy:PlotView Model="{Binding Graph}" Margin="0,0,0,0" Grid.Column="1"/>
+            <StackPanel Grid.Column="1" Margin="10,0,10,0">
+                <Label FontWeight="Bold" Content="Function:"/>
+                <TextBox x:Name="tb_function" Height="36" />
+                
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Name:" FontWeight="Bold"></Label>
+                    <TextBox Name="tb_name" Width="80" Height="18" FontSize="9"></TextBox>
+                </StackPanel>
+                
+                <StackPanel Orientation="Horizontal">
+                    <Label FontWeight="Bold" Content="X min:"/>
+                    <TextBox x:Name="tb_xfrom" Height="18" Width="28" FontSize="10"/>
+                    <Label FontWeight="Bold" Content="max:"/>
+                    <TextBox x:Name="tb_xto" Height="18" Width="28" FontSize="10"/>
+                </StackPanel>
+                
+                <StackPanel Orientation="Horizontal">
+                    <Label FontWeight="Bold" Content="Dx:"></Label>
+                    <TextBox x:Name="tb_dx" Height="18" Width="86" FontSize="10"></TextBox>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <Label FontWeight="Bold" Content="Samples:"/>
+                    <TextBox x:Name="tb_samples" Width="28" Height="18" FontSize="10"/>
+                </StackPanel>
+
+                <Label Content="Calucations:" FontWeight="Bold" Margin="0,4,0,0" ></Label>
+                <CheckBox Name="cb_derivative" Content="Derivative"></CheckBox>
+                <CheckBox Name="cb_integral" Content="Integral" IsEnabled="False"></CheckBox>
+                <Button Content="Save Changes" Click="SaveCurrentModel"></Button>
+            </StackPanel>
+            
+            <oxy:PlotView Model="{Binding Graph}" Margin="0,0,0,0" Grid.Column="2"/>
         </Grid>
 
         <Label FontWeight="Bold" Content="Output:"/>

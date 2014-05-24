@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Specialized;
+using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using OxyPlot;
 using SchemeGraphs.Graph;
 using SchemeGraphs.Graph.Implementation;
+using SchemeGraphs.Model;
+using SchemeGraphs.ViewModels;
 using SchemeLibrary.Loaders;
 using SchemeLibrary.Loaders.Implementation;
-using SchemeLibrary.Math;
 using SchemeLibrary.Math.Implementation;
 
 namespace SchemeGraphs.Views
@@ -16,37 +20,66 @@ namespace SchemeGraphs.Views
     public partial class MainWindow : Window
     {
         public PlotModel Graph { get; private set; }
+        public ObservableLineSeriesViewModelCollection ModelViewCollection { get; set; }
+        public LineSeriesViewModel CurrentModel { get; set; }
+
+        private ObservableLineSeriesModelCollection modelCollection;
         
         private ISchemeLoader loader;
-        private IFunctionPlotter plotter;
+        private ILineSeriesTranformer transformer;
         private IChart chart;
 
         public MainWindow()
         {
-            InitializeComponent();
             DataContext = this;
 
             Graph = new PlotModel();
+            chart = new ChartAdapter(Graph);
+            chart.SetLinearScale(AxisProperty.Both);
 
             loader = new SchemeLoader();
             loader.Import(@"Scheme.rkt");
 
-            plotter = new FunctionPlotter(new ProxySchemeEvaluator());
-            chart = new ChartAdapter(Graph);
+            transformer = new LineSeriesTransformer(new FunctionPlotter(new ProxySchemeEvaluator()));
 
-            chart.SetLinearScale(AxisProperty.Both);
+            modelCollection = new ObservableLineSeriesModelCollection();
+            modelCollection.CollectionChanged += ModelChangedEvent;
+
+            ModelViewCollection = new ObservableLineSeriesViewModelCollection();
+            ModelViewCollection.CollectionChanged += ModelViewCollectionOnCollectionChanged;
+            ModelViewCollection.AddModel(new LineSeriesViewModel
+                                      {
+                                          Function = "(lambda (x) x)",
+                                          Name = "Example 1",
+                                      });
+            InitializeComponent();
         }
 
-        private void EvaluateClick(object sender, RoutedEventArgs e)
+        private void ModelViewCollectionOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
+        {
+        }
+
+        private void ModelChangedEvent(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
+        {
+            chart.Clear();
+            foreach (var model in modelCollection)
+            {
+                chart.AddLineSeries(model.Name, model.FunctionPlots);
+                if (model.HasDerivative)
+                {
+                    chart.AddLineSeries(model.Name + Constants.DerivativeNamePostfix, model.DerivativePlots);
+                }
+            }
+        }
+
+        private void AddLineSeries(object sender, RoutedEventArgs e)
         {
             try
             {
-                var xBegin = Double.Parse(tb_xfrom.Text);
-                var xEnd = Double.Parse(tb_xto.Text);
-                var samples = Int32.Parse(tb_samples.Text);
-                var plots = plotter.PlotFunction(tb_function.Text, xBegin, xEnd, samples);
-
-                chart.AddLineSeries(tb_name.Text,plots);
+                ModelViewCollection.AddModel(new LineSeriesViewModel
+                                     {
+                                         Name = string.Format("New Func ({0})",ModelViewCollection.Count(x => x.Name.StartsWith("New Func ("))+1),
+                                     });
             }
             catch (Exception ex)
             {
@@ -56,7 +89,7 @@ namespace SchemeGraphs.Views
 
         private void ClearClick(object sender, RoutedEventArgs e)
         {
-            chart.Clear();
+            ModelViewCollection.Clear();
             tb_output.Text = string.Empty;
         }
 
@@ -72,34 +105,45 @@ namespace SchemeGraphs.Views
                 chart.SetLogrithmicScale(AxisProperty.Both);
         }
 
-        private void AddDerivativeChecked(object sender, RoutedEventArgs e)
+        #region because binding doent cut it
+
+        private void SaveCurrentModel(object sender, RoutedEventArgs e)
         {
+            if (CurrentModel == null) return;
+            CurrentModel.Function = tb_function.Text;
+            CurrentModel.Name = tb_name.Text;
+            CurrentModel.XFrom = tb_xfrom.Text;
+            CurrentModel.XTo = tb_xto.Text;
+            CurrentModel.Dx = tb_dx.Text;
+            CurrentModel.Samples = tb_samples.Text;
+            CurrentModel.HasDerivative = (bool) cb_derivative.IsChecked ;
+            CurrentModel.HasIntegral = (bool) cb_integral.IsChecked;
             try
             {
-                var dx = Double.Parse(tb_dx.Text);
-                var xBegin = Double.Parse(tb_xfrom.Text);
-                var xEnd = Double.Parse(tb_xto.Text);
-                var samples = Int32.Parse(tb_samples.Text);
-                var plots = plotter.PlotDerivative(tb_function.Text, dx, xBegin, xEnd, samples);
-
-                chart.AddLineSeries(tb_name.Text+@"_derv", plots);
+                var model = transformer.Transform(CurrentModel);
+                var existing = modelCollection.FirstOrDefault(x => x.Name == model.Name);
+                modelCollection.Remove(existing);
+                modelCollection.Add(model);
             }
             catch (Exception ex)
             {
-                tb_output.AppendText(ex.Message);
+                tb_output.Text = ex.Message;
             }
         }
 
-        private void RemoveDerivative(object sender, RoutedEventArgs e)
+        private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            try
-            {
-                chart.Remove(tb_name.Text+@"_derv");
-            }
-            catch (Exception ex)
-            {
-                tb_output.AppendText(ex.Message);
-            }
+            if (CurrentModel == null) return;
+            tb_function.Text = CurrentModel.Function;
+            tb_name.Text = CurrentModel.Name;
+            tb_xfrom.Text = CurrentModel.XFrom;
+            tb_xto.Text = CurrentModel.XTo;
+            tb_dx.Text = CurrentModel.Dx;
+            tb_samples.Text = CurrentModel.Samples;
+            cb_derivative.IsChecked = CurrentModel.HasDerivative;
+            cb_integral.IsChecked = CurrentModel.HasIntegral;
         }
+
+        #endregion
     }
 }

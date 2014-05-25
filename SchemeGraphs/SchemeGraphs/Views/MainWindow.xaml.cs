@@ -157,14 +157,6 @@ namespace SchemeGraphs.Views
             }
         }
 
-        private void Bt_CalcInt_OnClick(object sender, RoutedEventArgs e)
-        {
-            if (CurrentModel != null)
-            {
-                CurrentModel.HasIntegral = true;
-            }
-        }
-
         #endregion
     }
 }

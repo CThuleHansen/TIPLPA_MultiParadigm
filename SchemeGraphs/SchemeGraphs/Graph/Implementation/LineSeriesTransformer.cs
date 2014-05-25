@@ -93,8 +93,16 @@ namespace SchemeGraphs.Graph.Implementation
                     }
                     if (errorOccured == false)
                     {
+                        double value = 0.0;
                         var plots = plotter.PlotIntegral(viewModel.Function, x_min, x_max, rectangles);
-                        var value = calculator.Integrate(viewModel.Function, x_min, x_max, rectangles);
+                        try
+                        {
+                            value = calculator.Integrate(viewModel.Function, x_min, x_max, rectangles);
+                        }
+                        catch (NullReferenceException ex)
+                        {
+                            throw new ArgumentException("No result could be obtained.", ex);
+                        }
                         if (plots != null)
                         {
                             result.IntegralPlots = plots.ToList();

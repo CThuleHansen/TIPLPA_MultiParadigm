@@ -78,8 +78,7 @@
                 <CheckBox Name="cb_integral" Content="Integral" IsChecked="{Binding Path=HasIntegral}" Style="{StaticResource ListEnableStyle}"></CheckBox>
                 
                 <Button Name="bt_SaveCurrentModel" Content="Evaluate" Click="DrawCurrentModel" Style="{StaticResource ListEnableStyle}"></Button>
-                <Button x:Name="bt_CalcInt" Content="Calculate Integral Value" Click="Bt_CalcInt_OnClick" Style="{StaticResource ListEnableStyle}"/>
-                
+
                 <StackPanel Orientation="Horizontal" Margin="0,0,0.2,0">
                     <Label FontWeight="Bold" Content="integralValue: "/>
                     <TextBox x:Name="tb_integral" Width="60" Height="18" FontSize="10" Text="{Binding IntegralValue}" IsReadOnly="True" Style="{StaticResource ListEnableStyle}"/>

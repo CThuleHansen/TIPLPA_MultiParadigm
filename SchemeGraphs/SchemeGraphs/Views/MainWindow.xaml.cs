@@ -123,8 +123,12 @@ namespace SchemeGraphs.Views
 
         private void DeleteSelectedLineSeries(object sender, RoutedEventArgs e)
         {
-            this.chart.Clear();
-            this.ModelViewCollection.RemoveModel(this.CurrentModel);
+            if (CurrentModel != null)
+            {
+                this.chart.Clear();
+                modelCollection.Remove(modelCollection.FirstOrDefault(x => x.Uid == CurrentModel.Uid));
+                this.ModelViewCollection.RemoveModel(this.CurrentModel);
+            }
         }
 
         private void ClearClick(object sender, RoutedEventArgs e)

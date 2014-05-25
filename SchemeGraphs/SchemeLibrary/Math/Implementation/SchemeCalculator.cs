@@ -5,11 +5,11 @@ using SchemeLibrary.Loaders;
 
 namespace SchemeLibrary.Math.Implementation
 {
-    public class FunctionPlotter : IFunctionPlotter
+    public class SchemeCalculator : IFunctionPlotter, ISchemeCalculator
     {
         private readonly ISchemeEvaluator evaluator;
 
-        public FunctionPlotter(ISchemeEvaluator evaluator)
+        public SchemeCalculator(ISchemeEvaluator evaluator)
         {
             this.evaluator = evaluator;
         }
@@ -27,7 +27,7 @@ namespace SchemeLibrary.Math.Implementation
             var result = ConvertToPair(plots);
             return result;
         }
-
+        
         public IEnumerable<KeyValuePair<double, double>> PlotIntegral(string function, double xBegin, double xEnd, int noOfSamples)
         {
             throw new System.NotImplementedException();
@@ -40,5 +40,13 @@ namespace SchemeLibrary.Math.Implementation
             
             return pairs.ToList();
         }
+
+        public double CalculateIntegral(string function, double xBegin, double xEnd, int noOfSamples)
+        {
+            var result = evaluator.Evaluate<double>("(CalcInt {0} {1} {2} {3})", evaluator.Evaluate<Callable>(function),
+                xBegin, xEnd, noOfSamples);
+            return result;
+        }
+
     }
 }

@@ -10,6 +10,7 @@ using SchemeGraphs.Model;
 using SchemeGraphs.ViewModels;
 using SchemeLibrary.Loaders;
 using SchemeLibrary.Loaders.Implementation;
+using SchemeLibrary.Math;
 using SchemeLibrary.Math.Implementation;
 
 namespace SchemeGraphs.Views
@@ -24,9 +25,10 @@ namespace SchemeGraphs.Views
         public LineSeriesViewModel CurrentModel { get; set; }
 
         private ObservableLineSeriesModelCollection modelCollection;
-        
+
         private ISchemeLoader loader;
         private ILineSeriesTranformer transformer;
+        private ISchemeCalculator schemeCalculator;
         private IChart chart;
 
         public MainWindow()
@@ -39,8 +41,9 @@ namespace SchemeGraphs.Views
 
             loader = new SchemeLoader();
             loader.Import(@"Scheme.rkt");
-
-            transformer = new LineSeriesTransformer(new FunctionPlotter(new ProxySchemeEvaluator()));
+            var schemeEvaluator = new ProxySchemeEvaluator();
+            this.schemeCalculator = new SchemeCalculator(schemeEvaluator);
+            transformer = new LineSeriesTransformer((IFunctionPlotter)this.schemeCalculator);
 
             modelCollection = new ObservableLineSeriesModelCollection();
             modelCollection.CollectionChanged += ModelChangedEvent;
@@ -79,7 +82,7 @@ namespace SchemeGraphs.Views
             {
                 ModelViewCollection.AddModel(new LineSeriesViewModel
                                      {
-                                         Name = string.Format("New Func ({0})",ModelViewCollection.Count(x => x.Name.StartsWith("New Func ("))+1),
+                                         Name = string.Format("New Func ({0})", ModelViewCollection.Count(x => x.Name.StartsWith("New Func (")) + 1),
                                      });
             }
             catch (Exception ex)
@@ -97,13 +100,13 @@ namespace SchemeGraphs.Views
 
         private void CbLinearChecked(object sender, RoutedEventArgs e)
         {
-            if (chart != null) 
+            if (chart != null)
                 chart.SetLinearScale(AxisProperty.Both);
         }
 
         private void CbLogChecked(object sender, RoutedEventArgs e)
         {
-            if (chart != null) 
+            if (chart != null)
                 chart.SetLogrithmicScale(AxisProperty.Both);
         }
 
@@ -111,23 +114,20 @@ namespace SchemeGraphs.Views
 
         private static int test = 0;
 
+        private void CalculateIntegral(object sender, RoutedEventArgs e)
+        {
+            CurrentModel.Integral = this.schemeCalculator.CalculateIntegral(this.CurrentModel.Function,
+                double.Parse(this.CurrentModel.XFrom), double.Parse(this.CurrentModel.XTo), Int32.Parse(this.CurrentModel.Samples)).ToString();
+        }
+
         private void SaveCurrentModel(object sender, RoutedEventArgs e)
         {
-            if (CurrentModel == null) return;
-            CurrentModel.Function = tb_function.Text;
-            CurrentModel.Name = tb_name.Text;
-            CurrentModel.XFrom = tb_xfrom.Text;
-            CurrentModel.XTo = tb_xto.Text;
-            CurrentModel.Dx = tb_dx.Text;
-            CurrentModel.Samples = tb_samples.Text;
-            CurrentModel.HasDerivative = (bool) cb_derivative.IsChecked ;
-            CurrentModel.HasIntegral = (bool) cb_integral.IsChecked;
             try
             {
                 var model = transformer.Transform(CurrentModel);
                 var existing = modelCollection.FirstOrDefault(x => x.Name == model.Name);
                 modelCollection.Remove(existing);
-                    modelCollection.Add(model);
+                modelCollection.Add(model);
             }
             catch (Exception ex)
             {
@@ -146,7 +146,6 @@ namespace SchemeGraphs.Views
             tb_dx.Text = CurrentModel.Dx;
             tb_samples.Text = CurrentModel.Samples;
             cb_derivative.IsChecked = CurrentModel.HasDerivative;
-            cb_integral.IsChecked = CurrentModel.HasIntegral;
         }
 
         private void ToggleEnabled(bool flag)
@@ -163,5 +162,11 @@ namespace SchemeGraphs.Views
         }
 
         #endregion
+
+        private void DeleteSelectedLineSeries(object sender, RoutedEventArgs e)
+        {
+            this.modelCollection.Remove(modelCollection.FirstOrDefault(x => x.Name == this.CurrentModel.Name));
+            this.ModelViewCollection.RemoveModel(this.CurrentModel);
+        }
     }
 }

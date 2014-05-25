@@ -18,7 +18,8 @@ namespace SchemeGraphs.Graph.Implementation
 
         public void AddLineSeries(string name, IEnumerable<KeyValuePair<double, double>> points)
         {
-            lineSeries.Add(name, ToLineSeries(points));
+            var currentLineSeries = ToLineSeries(points);
+            lineSeries.Add(name, currentLineSeries);
             Validate();
         }
 
@@ -80,7 +81,11 @@ namespace SchemeGraphs.Graph.Implementation
 
         private LineSeries ToLineSeries(IEnumerable<KeyValuePair<double, double>> points)
         {
-            var result = new LineSeries();
+            var result = new LineSeries()
+            {
+                MarkerType = MarkerType.Circle,
+                MarkerSize = 3,
+            };
             foreach (var pair in points)
             {
                 result.Points.Add(new DataPoint(pair.Key, pair.Value));

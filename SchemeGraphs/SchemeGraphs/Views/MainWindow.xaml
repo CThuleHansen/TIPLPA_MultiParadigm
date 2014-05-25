@@ -11,10 +11,10 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            
+
             <StackPanel Orientation="Vertical">
                 <Label Content="Lineseries:" FontWeight="Bold"></Label>
-                <ListView  ItemsSource="{Binding ModelViewCollection, Mode=TwoWay}" SelectedItem="{Binding CurrentModel, Mode=TwoWay}" MinHeight="200" SelectionChanged="Selector_OnSelectionChanged" >
+                <ListView Name="lstModels" ItemsSource="{Binding ModelViewCollection, Mode=TwoWay}" SelectedItem="{Binding CurrentModel, Mode=TwoWay}" MinHeight="200" SelectionChanged="Selector_OnSelectionChanged" SelectionMode="Single">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Vertical">
@@ -29,41 +29,49 @@
                 <RadioButton GroupName="rb_scale" Content="Log10" Checked="CbLogChecked" ></RadioButton>
 
                 <Button Click="AddLineSeries" Content="Add Lineseries"/>
+                <Button Click="DeleteSelectedLineSeries" Content="Delete selected" IsEnabled="{Binding ElementName=lstModels, Path=SelectedItems.Count}">
+                </Button>
                 <Button Content="Clear" Click="ClearClick" VerticalAlignment="Bottom"></Button>
+
             </StackPanel>
-            
-            <StackPanel Grid.Column="1" Margin="10,0,10,0">
+
+            <StackPanel Grid.Column="1" Margin="10,0,10,0" DataContext="{Binding ElementName=lstModels, Path=SelectedItem}">
                 <Label FontWeight="Bold" Content="Function:"/>
-                <TextBox x:Name="tb_function" Height="36" />
-                
+                <TextBox x:Name="tb_function" Height="36" Text="{Binding Path=Function}"/>
+
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Name:" FontWeight="Bold"></Label>
-                    <TextBox Name="tb_name" Width="80" Height="18" FontSize="9"></TextBox>
+                    <TextBox Name="tb_name" Width="80" Height="18" FontSize="9" Text="{Binding Path=Name}"></TextBox>
                 </StackPanel>
-                
+
                 <StackPanel Orientation="Horizontal">
                     <Label FontWeight="Bold" Content="X min:"/>
-                    <TextBox x:Name="tb_xfrom" Height="18" Width="28" FontSize="10"/>
+                    <TextBox x:Name="tb_xfrom" Height="18" Width="28" FontSize="10" Text="{Binding Path=XFrom}"/>
                     <Label FontWeight="Bold" Content="max:"/>
-                    <TextBox x:Name="tb_xto" Height="18" Width="28" FontSize="10"/>
+                    <TextBox x:Name="tb_xto" Height="18" Width="28" FontSize="10" Text="{Binding Path=XTo}"/>
                 </StackPanel>
-                
+
                 <StackPanel Orientation="Horizontal">
                     <Label FontWeight="Bold" Content="Dx:"></Label>
-                    <TextBox x:Name="tb_dx" Height="18" Width="86" FontSize="10"></TextBox>
+                    <TextBox x:Name="tb_dx" Height="18" Width="86" FontSize="10" Text="{Binding Path=Dx}"></TextBox>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
                     <Label FontWeight="Bold" Content="Samples:"/>
-                    <TextBox x:Name="tb_samples" Width="28" Height="18" FontSize="10"/>
+                    <TextBox x:Name="tb_samples" Width="28" Height="18" FontSize="10" Text="{Binding Path=Samples}"/>
                 </StackPanel>
 
                 <Label Content="Calucations:" FontWeight="Bold" Margin="0,4,0,0" ></Label>
-                <CheckBox Name="cb_derivative" Content="Derivative"></CheckBox>
-                <CheckBox Name="cb_integral" Content="Integral" IsEnabled="False"></CheckBox>
+                <CheckBox Name="cb_derivative" Content="Derivative"  IsChecked="{Binding Path=HasDerivative}"></CheckBox>
+                <CheckBox Name="cb_integral" Content="Integral" IsChecked="{Binding Path=HasIntegral}" ></CheckBox>
                 <Button Name="bt_SaveCurrentModel" Content="Draw" Click="SaveCurrentModel"></Button>
+                <Button x:Name="bt_CalcInt" Content="Calculate integral" Click="CalculateIntegral" Margin="0,0,0.2,0"/>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0.2,0">
+                    <Label FontWeight="Bold" Content="Integral: "/>
+                    <TextBox x:Name="tb_integral" Width="60" Height="18" FontSize="10" Text="{Binding Integral}"/>
+                </StackPanel>
             </StackPanel>
-            
+
             <oxy:PlotView Model="{Binding Graph}" Margin="0,0,60,0" Grid.Column="2"/>
         </Grid>
 

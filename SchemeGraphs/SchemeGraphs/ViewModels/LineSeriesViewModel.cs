@@ -65,6 +65,14 @@ namespace SchemeGraphs.ViewModels
             set { SetField(ref samples, value, "Samples"); }
         }
 
+        private string integral;
+
+        public string Integral
+        {
+            get { return integral; }
+            set { SetField(ref integral, value, "Integral"); }
+        }
+        
         private bool hasDerivative;
         public bool HasDerivative
         {

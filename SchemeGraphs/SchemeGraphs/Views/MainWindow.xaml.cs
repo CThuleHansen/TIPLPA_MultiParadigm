@@ -28,6 +28,7 @@ namespace SchemeGraphs.Views
 
         private ISchemeLoader loader;
         private ILineSeriesTranformer transformer;
+        private ICalculate calculator;
         private IChart chart;
 
         public MainWindow()
@@ -41,7 +42,9 @@ namespace SchemeGraphs.Views
             loader = new SchemeLoader();
             loader.Import(@"Scheme.rkt");
             var evaluator = new ProxySchemeEvaluator();
-            transformer = new LineSeriesTransformer(new FunctionPlotter(evaluator),new Calculator(evaluator));
+            var schemeCalculator = new SchemeCalculator(evaluator);
+            transformer = new LineSeriesTransformer(schemeCalculator);
+            this.calculator = schemeCalculator;
 
             modelCollection = new ObservableLineSeriesModelCollection();
             modelCollection.CollectionChanged += ModelChangedEvent;
@@ -141,10 +144,19 @@ namespace SchemeGraphs.Views
             }
         }
 
+        private void Bt_CalcInt_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.CurrentModel.Integral = this.calculator.Integrate(this.CurrentModel.Function,
+                double.Parse(this.CurrentModel.XFrom), double.Parse(this.CurrentModel.XTo),
+                Int32.Parse(this.CurrentModel.Rectangles)).ToString();
+        }
+
         private void DeleteSelectedLineSeries(object sender, RoutedEventArgs e)
         {
             this.modelCollection.Remove(modelCollection.FirstOrDefault(x => x.Uid == this.CurrentModel.Uid));
             this.ModelViewCollection.RemoveModel(this.CurrentModel);
         }
+
+
     }
 }

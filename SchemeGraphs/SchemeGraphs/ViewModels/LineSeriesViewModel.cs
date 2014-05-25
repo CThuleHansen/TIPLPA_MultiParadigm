@@ -68,13 +68,7 @@ namespace SchemeGraphs.ViewModels
             set { SetField(ref samples, value, "Samples"); }
         }
 
-        private string integral;
 
-        public string Integral
-        {
-            get { return integral; }
-            set { SetField(ref integral, value, "Integral"); }
-        }
         
         private bool hasDerivative;
         public bool HasDerivative
@@ -88,6 +82,22 @@ namespace SchemeGraphs.ViewModels
         {
             get { return hasIntegral; } 
             set { SetField(ref hasIntegral, value, "HasIntegral"); }
+        }
+
+        private string rectangles;
+
+        public string Rectangles
+        {
+            get { return rectangles; }
+            set { SetField(ref rectangles, value, "Rectangles"); }
+        }
+
+        private string integral;
+
+        public string Integral
+        {
+            get { return integral; }
+            set { SetField(ref integral, value, "Integral"); }
         }
 
         #endregion

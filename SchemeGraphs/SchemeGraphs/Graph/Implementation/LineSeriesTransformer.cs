@@ -9,12 +9,10 @@ namespace SchemeGraphs.Graph.Implementation
     public class LineSeriesTransformer : ILineSeriesTranformer
     {
         private readonly IFunctionPlotter plotter;
-        private readonly ICalculate calculator;
 
-        public LineSeriesTransformer(IFunctionPlotter plotter, ICalculate calculator)
+        public LineSeriesTransformer(IFunctionPlotter plotter)
         {
             this.plotter = plotter;
-            this.calculator = calculator;
         }
 
         /// <summary>
@@ -43,12 +41,6 @@ namespace SchemeGraphs.Graph.Implementation
             {
                 result.DerivativePlots =
                     plotter.PlotDerivative(viewModel.Function, delta_x, x_min, x_max, samples).ToList();
-            }
-
-            if (viewModel.HasIntegral)
-            {
-                result.IntegralPlots = plotter.PlotIntegral(viewModel.Function, x_min, x_max, samples).ToList();
-                result.IntegralValue = calculator.Integrate(viewModel.Function, x_min, x_max, samples);
             }
 
             return result;

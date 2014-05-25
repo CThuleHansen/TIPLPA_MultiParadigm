@@ -19,7 +19,7 @@
 
             <StackPanel Orientation="Vertical">
                 <Label Content="Lineseries:" FontWeight="Bold"></Label>
-                <ListView Name="lstModels" ItemsSource="{Binding ModelViewCollection, Mode=TwoWay}" SelectedItem="{Binding CurrentModel, Mode=TwoWay}" MinHeight="200" SelectionMode="Single">
+                <ListView Name="lstModels" ItemsSource="{Binding ModelViewCollection, Mode=TwoWay}" SelectedItem="{Binding CurrentModel, Mode=TwoWay}" MinHeight="200" SelectionMode="Single" SelectionChanged="LstModels_OnSelectionChanged">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Vertical">
@@ -70,7 +70,6 @@
 
                 <Label Content="Calucations:" FontWeight="Bold" Margin="0,4,0,0" ></Label>
                 <CheckBox Name="cb_derivative" Content="Derivative"  IsChecked="{Binding Path=HasDerivative}" Style="{StaticResource ListEnableStyle}"></CheckBox>
-                <CheckBox Name="cb_integral" Content="Integral" IsChecked="{Binding Path=HasIntegral}" Style="{StaticResource ListEnableStyle}"></CheckBox>
                 <Button Name="bt_SaveCurrentModel" Content="Draw" Click="DrawCurrentModel" Style="{StaticResource ListEnableStyle}"></Button>
                 <Button x:Name="bt_CalcInt" Content="Calculate Integral" Click="Bt_CalcInt_OnClick" Style="{StaticResource ListEnableStyle}"/>
                 <StackPanel Orientation="Horizontal" Margin="0,0,0.2,0">

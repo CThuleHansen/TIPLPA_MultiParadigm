@@ -52,7 +52,6 @@
     <Compile Include="Loaders\ISchemeLoader.cs" />
     <Compile Include="Math\ICalculate.cs" />
     <Compile Include="Math\IFunctionPlotter.cs" />
-    <Compile Include="Math\Implementation\Calculator.cs" />
     <Compile Include="Math\Implementation\SchemeCalculator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Loaders\Implementation\ProxySchemeEvaluator.cs" />

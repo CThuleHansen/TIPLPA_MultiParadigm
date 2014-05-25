@@ -66,16 +66,12 @@ namespace SchemeGraphs.Views
         private void ModelChangedEvent(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
         {
             chart.Clear();
-            foreach (var model in modelCollection)
+            foreach (var model in modelCollection.Where(x => x.Name == this.CurrentModel.Name))
             {
-                chart.AddLineSeries(model.Name, model.FunctionPlots);
+                chart.AddLineSeries(model.Name, model.FunctionPlots, OxyColors.Green);
                 if (model.HasDerivative)
                 {
-                    chart.AddLineSeries(model.Name + Constants.DerivativeNamePostfix, model.DerivativePlots);
-                }
-                if (model.HasIntegral)
-                {
-                    chart.AddIntegralBoxes(model.Name+Constants.IntegralNamePostfix, model.IntegralPlots, model.IntegralValue);
+                    chart.AddLineSeries(model.Name + Constants.DerivativeNamePostfix, model.DerivativePlots, OxyColors.Red);
                 }
             }
         }
@@ -157,6 +153,16 @@ namespace SchemeGraphs.Views
             this.ModelViewCollection.RemoveModel(this.CurrentModel);
         }
 
+        private void LstModels_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            this.chart.Clear();
+            var model = this.modelCollection.FirstOrDefault(x => x.Name == this.CurrentModel.Name);
+            if (model != null)
+            {
+                this.modelCollection.Remove(model);
+                this.modelCollection.Add(model);
 
+            }
+        }
     }
 }

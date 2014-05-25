@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Shapes;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
@@ -17,9 +18,10 @@ namespace SchemeGraphs.Graph.Implementation
             series = new Dictionary<string, Series>();
         }
 
-        public void AddLineSeries(string name, IEnumerable<KeyValuePair<double, double>> points)
+        public void AddLineSeries(string name, IEnumerable<KeyValuePair<double, double>> points, OxyColor color)
         {
-            series.Add(name, ToLineSeries(points));
+            var lineSeries = ToLineSeries(points, color);
+            series.Add(name, lineSeries);
             Validate();
         }
 
@@ -81,12 +83,14 @@ namespace SchemeGraphs.Graph.Implementation
             this.model.InvalidatePlot(true);
         }
 
-        private LineSeries ToLineSeries(IEnumerable<KeyValuePair<double, double>> points)
+        private LineSeries ToLineSeries(IEnumerable<KeyValuePair<double, double>> points, OxyColor color)
         {
             var result = new LineSeries()
             {
+                Color = color,
                 MarkerType = MarkerType.Circle,
-                MarkerSize = 3,
+                MarkerStrokeThickness = 10,
+                MarkerSize = 6,
             };
             foreach (var pair in points)
             {

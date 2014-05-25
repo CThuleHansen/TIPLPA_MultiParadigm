@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using OxyPlot;
 
 namespace SchemeGraphs.Graph
 {
@@ -9,7 +10,7 @@ namespace SchemeGraphs.Graph
         /// </summary>
         /// <param name="name">Identifier for the series.</param>
         /// <param name="points">Points plotted.</param>
-        void AddLineSeries(string name, IEnumerable<KeyValuePair<double,double>> points);
+        void AddLineSeries(string name, IEnumerable<KeyValuePair<double, double>> points, OxyColor color);
 
         /// <summary>
         /// Graphs boxes that span the area under a line series representing the integral.

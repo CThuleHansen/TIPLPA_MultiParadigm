@@ -34,7 +34,6 @@ namespace SchemeGraphs.Graph.Implementation
                                       Function = viewModel.Function,
                                       FunctionPlots = plotter.PlotFunction(viewModel.Function,x_min,x_max,samples).ToList(),
                                       HasDerivative = viewModel.HasDerivative,
-                                      HasIntegral = viewModel.HasIntegral,
                                   };
             
             if (viewModel.HasDerivative)

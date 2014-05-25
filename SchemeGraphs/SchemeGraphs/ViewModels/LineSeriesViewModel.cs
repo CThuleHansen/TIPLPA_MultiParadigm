@@ -77,13 +77,6 @@ namespace SchemeGraphs.ViewModels
             set { SetField(ref hasDerivative, value, "HasDerivative"); }
         }
 
-        private bool hasIntegral;
-        public bool HasIntegral
-        {
-            get { return hasIntegral; } 
-            set { SetField(ref hasIntegral, value, "HasIntegral"); }
-        }
-
         private string rectangles;
 
         public string Rectangles

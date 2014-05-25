@@ -28,7 +28,6 @@ namespace SchemeGraphs.Views
 
         private ISchemeLoader loader;
         private ILineSeriesTranformer transformer;
-        private ISchemeCalculator schemeCalculator;
         private IChart chart;
 
         public MainWindow()
@@ -41,9 +40,8 @@ namespace SchemeGraphs.Views
 
             loader = new SchemeLoader();
             loader.Import(@"Scheme.rkt");
-            var schemeEvaluator = new ProxySchemeEvaluator();
-            this.schemeCalculator = new SchemeCalculator(schemeEvaluator);
-            transformer = new LineSeriesTransformer((IFunctionPlotter)this.schemeCalculator);
+            var evaluator = new ProxySchemeEvaluator();
+            transformer = new LineSeriesTransformer(new FunctionPlotter(evaluator),new Calculator(evaluator));
 
             modelCollection = new ObservableLineSeriesModelCollection();
             modelCollection.CollectionChanged += ModelChangedEvent;
@@ -72,6 +70,10 @@ namespace SchemeGraphs.Views
                 {
                     chart.AddLineSeries(model.Name + Constants.DerivativeNamePostfix, model.DerivativePlots);
                 }
+                if (model.HasIntegral)
+                {
+                    chart.AddIntegralBoxes(model.Name+Constants.IntegralNamePostfix, model.IntegralPlots, model.IntegralValue);
+                }
             }
         }
 
@@ -94,6 +96,7 @@ namespace SchemeGraphs.Views
         {
             modelCollection.Clear();
             ModelViewCollection.ClearModel();
+            chart.Clear();
             tb_output.Text = string.Empty;
         }
 
@@ -123,18 +126,12 @@ namespace SchemeGraphs.Views
         }
         #endregion
 
-        private void CalculateIntegral(object sender, RoutedEventArgs e)
-        {
-            CurrentModel.Integral = this.schemeCalculator.CalculateIntegral(this.CurrentModel.Function,
-                double.Parse(this.CurrentModel.XFrom), double.Parse(this.CurrentModel.XTo), Int32.Parse(this.CurrentModel.Samples)).ToString();
-        }
-
         private void DrawCurrentModel(object sender, RoutedEventArgs e)
         {
             try
             {
                 var model = transformer.Transform(CurrentModel);
-                var existing = modelCollection.FirstOrDefault(x => x.Name == model.Name);
+                var existing = modelCollection.FirstOrDefault(x => x.Uid == model.Uid);
                 modelCollection.Remove(existing);
                 modelCollection.Add(model);
             }
@@ -146,7 +143,7 @@ namespace SchemeGraphs.Views
 
         private void DeleteSelectedLineSeries(object sender, RoutedEventArgs e)
         {
-            this.modelCollection.Remove(modelCollection.FirstOrDefault(x => x.Name == this.CurrentModel.Name));
+            this.modelCollection.Remove(modelCollection.FirstOrDefault(x => x.Uid == this.CurrentModel.Uid));
             this.ModelViewCollection.RemoveModel(this.CurrentModel);
         }
     }

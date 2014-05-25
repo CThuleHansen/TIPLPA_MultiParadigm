@@ -5,11 +5,11 @@ using SchemeLibrary.Loaders;
 
 namespace SchemeLibrary.Math.Implementation
 {
-    public class SchemeCalculator : IFunctionPlotter, ISchemeCalculator
+    public class FunctionPlotter : IFunctionPlotter
     {
         private readonly ISchemeEvaluator evaluator;
 
-        public SchemeCalculator(ISchemeEvaluator evaluator)
+        public FunctionPlotter(ISchemeEvaluator evaluator)
         {
             this.evaluator = evaluator;
         }
@@ -43,13 +43,5 @@ namespace SchemeLibrary.Math.Implementation
             
             return pairs.ToList();
         }
-
-        public double CalculateIntegral(string function, double xBegin, double xEnd, int noOfSamples)
-        {
-            var result = evaluator.Evaluate<double>("(CalcInt {0} {1} {2} {3})", evaluator.Evaluate<Callable>(function),
-                xBegin, xEnd, noOfSamples);
-            return result;
-        }
-
     }
 }

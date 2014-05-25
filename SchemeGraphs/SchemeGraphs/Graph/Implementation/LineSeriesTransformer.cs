@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using OxyPlot.Wpf;
 using SchemeGraphs.Model;
 using SchemeGraphs.ViewModels;
 using SchemeLibrary.Math;
@@ -32,6 +31,7 @@ namespace SchemeGraphs.Graph.Implementation
 
             var result = new LineSeriesModel
                                   {
+                                      Uid = viewModel.Uid,
                                       Name = viewModel.Name,
                                       Function = viewModel.Function,
                                       FunctionPlots = plotter.PlotFunction(viewModel.Function,x_min,x_max,samples).ToList(),

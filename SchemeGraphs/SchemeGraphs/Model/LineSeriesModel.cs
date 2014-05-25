@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SchemeGraphs.Model
 {
     public class LineSeriesModel
     {
+        public Guid Uid { get; set; }
         public string Name { get; set; }
         public string Function { get; set; }
         public List<KeyValuePair<double,double>> FunctionPlots { get; set; }

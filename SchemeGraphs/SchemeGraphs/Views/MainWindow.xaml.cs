@@ -22,6 +22,7 @@ namespace SchemeGraphs.Views
     {
         public PlotModel Graph { get; private set; }
         public ObservableLineSeriesViewModelCollection ModelViewCollection { get; set; }
+        private ObservableLineSeriesModelCollection modelCollection;
         public LineSeriesViewModel CurrentModel { get; set; }
 
         private ISchemeLoader loader;
@@ -38,9 +39,13 @@ namespace SchemeGraphs.Views
 
             loader = new SchemeLoader();
             loader.Import(@"Scheme.rkt");
+
             var evaluator = new ProxySchemeEvaluator();
             var schemeCalculator = new SchemeCalculator(evaluator);
             transformer = new LineSeriesTransformer((IFunctionPlotter)schemeCalculator,(ICalculate)schemeCalculator);
+
+            modelCollection = new ObservableLineSeriesModelCollection();
+            modelCollection.CollectionChanged += ModelChanged;
 
             ModelViewCollection = new ObservableLineSeriesViewModelCollection();
             ModelViewCollection.AddModel(new LineSeriesViewModel
@@ -49,6 +54,28 @@ namespace SchemeGraphs.Views
                                           Name = "Example 1",
                                       });
             InitializeComponent();
+        }
+
+        private void ModelChanged(object sender, NotifyCollectionChangedEventArgs args)
+        {
+            chart.Clear();
+            foreach (var model in modelCollection)
+            {
+                chart.AddLineSeries(model.Name, model.FunctionPlots);
+                if (model.HasDerivative)
+                {
+                    chart.AddLineSeries(model.Name + Constants.DerivativeNamePostfix, model.DerivativePlots);
+                }
+                if (model.HasIntegral)
+                {
+                    chart.AddIntegralBoxes(model.Name + Constants.IntegralNamePostfix, model.IntegralPlots, model.IntegralValue);
+                    var viewModel = ModelViewCollection.FirstOrDefault(x => x.Uid == model.Uid);
+                    if (viewModel != null)
+                    {
+                        viewModel.IntegralValue = model.IntegralValue.ToString();
+                    }
+                }
+            }
         }
 
         #region Scale checkboxes
@@ -90,7 +117,7 @@ namespace SchemeGraphs.Views
             }
             catch (Exception ex)
             {
-                tb_output.AppendText(ex.Message);
+                tb_output.Text = ex.Message;
             }
         }
 
@@ -111,17 +138,14 @@ namespace SchemeGraphs.Views
         {
             try
             {
-                var model = transformer.Transform(CurrentModel);
-                if (model.FunctionPlots != null) this.CurrentModel.FunctionPlots = model.FunctionPlots;
-                if (this.CurrentModel.HasDerivative)
+                if (CurrentModel != null)
                 {
-                    if (model.DerivativePlots != null)
-                    {
-                        this.CurrentModel.DerivativePlots = model.DerivativePlots;
-                    }
+                    modelCollection.FirstOrDefault(x => x.Uid == CurrentModel.Uid);
+                    modelCollection.Remove(modelCollection.FirstOrDefault(x => x.Uid == CurrentModel.Uid));
+                    LineSeriesModel inserted = transformer.Transform(CurrentModel);
+                    modelCollection.Add(inserted);
+                    tb_output.Text = string.Empty;
                 }
-                AddLineSeriesToChart(this.CurrentModel);
-                tb_output.Text = "";
             }
             catch (Exception ex)
             {
@@ -131,37 +155,12 @@ namespace SchemeGraphs.Views
 
         private void Bt_CalcInt_OnClick(object sender, RoutedEventArgs e)
         {
-            try
+            if (CurrentModel != null)
             {
-                this.CurrentModel.Integral = this.transformer.CalculateIntegral(this.CurrentModel).ToString();
-                tb_output.Text = "";
+                CurrentModel.HasIntegral = true;
             }
-            catch (Exception ex)
-            {
-                tb_output.Text = ex.Message;
-            }
-            
         }
 
         #endregion
-
-        private void LstModels_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            AddLineSeriesToChart(this.CurrentModel);
-        }
-
-        private void AddLineSeriesToChart(LineSeriesViewModel lineSeriesViewModel)
-        {
-            if (this.CurrentModel != null)
-            {
-                this.chart.Clear();
-
-                if (lineSeriesViewModel.FunctionPlots != null)
-                    this.chart.AddLineSeries(lineSeriesViewModel.Name, lineSeriesViewModel.FunctionPlots);
-                if (lineSeriesViewModel.DerivativePlots != null && lineSeriesViewModel.HasDerivative)
-                    this.chart.AddLineSeries(lineSeriesViewModel.Name + Constants.DerivativeNamePostfix,
-                        lineSeriesViewModel.DerivativePlots);
-            }
-        }
     }
 }

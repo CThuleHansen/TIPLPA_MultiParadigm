@@ -29,11 +29,11 @@ namespace SchemeLibrary.Math.Implementation
                 return ConvertToPair(plots);
             return null;
         }
-        
-        public IEnumerable<KeyValuePair<double, double>> PlotIntegral(string function, double xBegin, double xEnd, int noOfSamples)
+
+        public IEnumerable<KeyValuePair<double, double>> PlotIntegral(string function, double xBegin, double xEnd, int rectangles)
         {
-            var plots = evaluator.Evaluate<Cons>("(CalcFuncPairs {0} {1} {2} {3})",
-                evaluator.Evaluate<Callable>(function), xBegin, xEnd, noOfSamples);
+            var plots = evaluator.Evaluate<Cons>("(CalcFuncPairs {0} {1} {2} (+ 1 {3}))", // CalcFuncPairs generates points base on # of samples, samples = rectangles + 1
+                evaluator.Evaluate<Callable>(function), xBegin, xEnd, rectangles);
             if (plots != null)
                 return ConvertToPair(plots);
             return null;

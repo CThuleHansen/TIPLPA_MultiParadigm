@@ -6,6 +6,5 @@ namespace SchemeGraphs.Graph
     public interface ILineSeriesTranformer
     {
         LineSeriesModel Transform(LineSeriesViewModel viewModel);
-        double CalculateIntegral(LineSeriesViewModel viewModel);
     }
 }

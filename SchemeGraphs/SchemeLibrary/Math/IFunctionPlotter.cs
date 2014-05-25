@@ -24,5 +24,15 @@ namespace SchemeLibrary.Math
         /// <param name="xEnd">Maximum value of x</param>
         /// <param name="noOfSamples">Number of plots.</param>        /// <returns></returns>
         IEnumerable<KeyValuePair<double, double>> PlotDerivative(string function, double dx, double xBegin, double xEnd, Int32 noOfSamples);
+
+        /// <summary>
+        /// Creates the plots of the integral boxes of the supplied function using the scheme engine.
+        /// It uses a pessimistic box method.
+        /// </summary>
+        /// <param name="function">Scheme procedure. e.g. (lambda (x) (* x x))</param>
+        /// <param name="xBegin">Minimum value of x</param>
+        /// <param name="xEnd">Maximum value of x</param>
+        /// <param name="rectangles">Number of rectangles used to illustrate the area below the function.</param>        /// <returns></returns>
+        IEnumerable<KeyValuePair<double, double>> PlotIntegral(string function, double xBegin, double xEnd, Int32 rectangles);
     }
 }

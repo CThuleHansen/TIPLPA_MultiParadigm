@@ -19,7 +19,7 @@
 
             <StackPanel Orientation="Vertical">
                 <Label Content="Lineseries:" FontWeight="Bold"></Label>
-                <ListView Name="lstModels" ItemsSource="{Binding ModelViewCollection, Mode=TwoWay}" SelectedItem="{Binding CurrentModel, Mode=TwoWay}" MinHeight="200" SelectionMode="Single" SelectionChanged="LstModels_OnSelectionChanged">
+                <ListView Name="lstModels" ItemsSource="{Binding ModelViewCollection, Mode=TwoWay}" SelectedItem="{Binding CurrentModel, Mode=TwoWay}" SelectedIndex="0" MinHeight="200" SelectionMode="Single">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Vertical">
@@ -59,26 +59,30 @@
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
-                    <Label FontWeight="Bold" Content="Dx:"></Label>
-                    <TextBox x:Name="tb_dx" Height="18" Width="86" FontSize="10" Text="{Binding Path=Dx}" Style="{StaticResource ListEnableStyle}"></TextBox>
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal">
                     <Label FontWeight="Bold" Content="Samples:"/>
                     <TextBox x:Name="tb_samples" Width="28" Height="18" FontSize="10" Text="{Binding Path=Samples}" Style="{StaticResource ListEnableStyle}"/>
                 </StackPanel>
 
-                <Label Content="Calucations:" FontWeight="Bold" Margin="0,4,0,0" ></Label>
-                <CheckBox Name="cb_derivative" Content="Derivative"  IsChecked="{Binding Path=HasDerivative}" Style="{StaticResource ListEnableStyle}"></CheckBox>
-                <Button Name="bt_SaveCurrentModel" Content="Draw" Click="DrawCurrentModel" Style="{StaticResource ListEnableStyle}"></Button>
-                <Button x:Name="bt_CalcInt" Content="Calculate Integral" Click="Bt_CalcInt_OnClick" Style="{StaticResource ListEnableStyle}"/>
+                <StackPanel Orientation="Horizontal">
+                    <Label FontWeight="Bold" Content="Dx:"></Label>
+                    <TextBox x:Name="tb_dx" Height="18" Width="86" FontSize="10" Text="{Binding Path=Dx}" Style="{StaticResource ListEnableStyle}"></TextBox>
+                </StackPanel>
+
                 <StackPanel Orientation="Horizontal" Margin="0,0,0.2,0">
                     <Label FontWeight="Bold" Content="Rectangles:"/>
                     <TextBox x:Name="tb_rectangles" Width="28" Height="18" FontSize="10" Text="{Binding Rectangles}" Style="{StaticResource ListEnableStyle}"/>
                 </StackPanel>
+
+                <Label Content="Draw:" FontWeight="Bold" Margin="0,4,0,0" ></Label>
+                <CheckBox Name="cb_derivative" Content="Derivative"  IsChecked="{Binding Path=HasDerivative}" Style="{StaticResource ListEnableStyle}"></CheckBox>
+                <CheckBox Name="cb_integral" Content="Integral" IsChecked="{Binding Path=HasIntegral}" Style="{StaticResource ListEnableStyle}"></CheckBox>
+                
+                <Button Name="bt_SaveCurrentModel" Content="Draw" Click="DrawCurrentModel" Style="{StaticResource ListEnableStyle}"></Button>
+                <Button x:Name="bt_CalcInt" Content="Calculate integralValue" Click="Bt_CalcInt_OnClick" Style="{StaticResource ListEnableStyle}"/>
+                
                 <StackPanel Orientation="Horizontal" Margin="0,0,0.2,0">
-                    <Label FontWeight="Bold" Content="Integral: "/>
-                    <TextBox x:Name="tb_integral" Width="60" Height="18" FontSize="10" Text="{Binding Integral}" IsReadOnly="True" Style="{StaticResource ListEnableStyle}"/>
+                    <Label FontWeight="Bold" Content="integralValue: "/>
+                    <TextBox x:Name="tb_integral" Width="60" Height="18" FontSize="10" Text="{Binding IntegralValue}" IsReadOnly="True" Style="{StaticResource ListEnableStyle}"/>
                 </StackPanel>
             </StackPanel>
 

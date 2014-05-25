@@ -79,6 +79,7 @@
     <Compile Include="Graph\ILineSeriesTranformer.cs" />
     <Compile Include="Graph\Implementation\LineSeriesTransformer.cs" />
     <Compile Include="Model\LineSeriesModel.cs" />
+    <Compile Include="Model\ObservableLineSeriesModelCollection.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ViewModels\ObservableLineSeriesViewModelCollection.cs" />
     <Compile Include="ViewModels\LineSeriesViewModel.cs" />

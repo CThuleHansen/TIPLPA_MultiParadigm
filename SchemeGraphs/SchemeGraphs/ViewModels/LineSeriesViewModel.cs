@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using SchemeGraphs.Annotations;
-using SchemeGraphs.Model;
 
 namespace SchemeGraphs.ViewModels
 {
@@ -19,12 +18,10 @@ namespace SchemeGraphs.ViewModels
             Name = string.Empty;
             XFrom = "1";
             XTo = "5";
-            Dx = "0,000001";
             Samples = "5";
+            Dx = "0,000001";
+            Rectangles = "4";
         }
-
-        public List<KeyValuePair<double, double>> FunctionPlots { get; set; }
-        public List<KeyValuePair<double, double>> DerivativePlots { get; set; }
 
         #region properties for view
 
@@ -81,6 +78,13 @@ namespace SchemeGraphs.ViewModels
             set { SetField(ref hasDerivative, value, "HasDerivative"); }
         }
 
+        private bool hasIntegral;
+        public bool HasIntegral
+        {
+            get { return hasIntegral; }
+            set { SetField(ref hasIntegral, value, "HasIntegral"); }
+        }
+
         private string rectangles;
 
         public string Rectangles
@@ -89,12 +93,11 @@ namespace SchemeGraphs.ViewModels
             set { SetField(ref rectangles, value, "Rectangles"); }
         }
 
-        private string integral;
-
-        public string Integral
+        private string integralValue;
+        public string IntegralValue
         {
-            get { return integral; }
-            set { SetField(ref integral, value, "Integral"); }
+            get { return integralValue; }
+            set { SetField(ref integralValue, value, "IntegralValue"); }
         }
 
         #endregion

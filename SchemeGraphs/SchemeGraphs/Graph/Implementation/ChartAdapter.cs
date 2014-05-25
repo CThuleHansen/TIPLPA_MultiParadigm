@@ -107,8 +107,8 @@ namespace SchemeGraphs.Graph.Implementation
             result.Points.Add(new DataPoint(p[0].Key,0));
             for (int i = 0; i < p.Count-1; i++)
             {
-                result.Points.Add(new DataPoint(p[i].Key, p[i + 1].Value));
-                result.Points.Add(new DataPoint(p[i + 1].Key, p[i + 1].Value));
+                result.Points.Add(new DataPoint(p[i].Key, p[i].Value));
+                result.Points.Add(new DataPoint(p[i + 1].Key, p[i].Value));
             }
             result.Points.Add(new DataPoint(p[p.Count-1].Key,0));
             result.Points.Add(new DataPoint(p[0].Key, 0));

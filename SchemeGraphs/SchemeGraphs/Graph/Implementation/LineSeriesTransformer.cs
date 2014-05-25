@@ -23,11 +23,19 @@ namespace SchemeGraphs.Graph.Implementation
         /// <returns></returns>
         public LineSeriesModel Transform(LineSeriesViewModel viewModel)
         {
-            LineSeriesModel result = new LineSeriesModel();
-            string errorMessage = "";
+            LineSeriesModel result = new LineSeriesModel
+                                     {
+                                         Uid = viewModel.Uid,
+                                         Name = viewModel.Name,
+                                         Function = viewModel.Function,
+                                         HasDerivative = viewModel.HasDerivative,
+                                         HasIntegral = viewModel.HasIntegral,
+                                     };
+            string errorMessage = string.Empty;
             double x_min, x_max, delta_x;
-            Int32 samples;
+            Int32 samples, rectangles;
             bool errorOccured = false;
+
             if (double.TryParse(viewModel.XFrom, out x_min) == false)
             {
                 errorMessage += "It was not possible to convert \"X min\" to a double.\n";
@@ -76,48 +84,33 @@ namespace SchemeGraphs.Graph.Implementation
 
                     }
                 }
+                if (viewModel.HasIntegral)
+                {
+                    if (Int32.TryParse(viewModel.Rectangles, out rectangles) == false)
+                    {
+                        errorMessage += "It was not possible to convert \"Dx\" to a double.\n";
+                        errorOccured = true;
+                    }
+                    if (errorOccured == false)
+                    {
+                        var plots = plotter.PlotIntegral(viewModel.Function, x_min, x_max, rectangles);
+                        var value = calculator.Integrate(viewModel.Function, x_min, x_max, rectangles);
+                        if (plots != null)
+                        {
+                            result.IntegralPlots = plots.ToList();
+                            result.IntegralValue = value;
+                        }
+                        else
+                        {
+                            throw new ArgumentException("No result could be obtained.");
+                        }
+                    }
+                }
+
                 if (errorOccured == false)
                     return result;
                 else
                    throw new ArgumentException(errorMessage);
         }
-
-        public double CalculateIntegral(LineSeriesViewModel viewModel)
-        {
-            string errorMessage = "";
-            bool errorOccured = false;
-            double xfrom, xto;
-            Int32 rectangles;
-            if (double.TryParse(viewModel.XFrom, out xfrom) == false)
-            {
-                errorMessage += "It was not possible to convert \"X min\" to a double.\n";
-                errorOccured = true;
-            }
-            if (double.TryParse(viewModel.XTo, out xto) == false)
-            {
-                errorMessage += "It was not possible to convert \"X max\" to a double.\n";
-                errorOccured = true;
-            }
-            if (Int32.TryParse(viewModel.Rectangles, out rectangles) == false)
-            {
-                errorMessage += "It was not possible to convert \"Rectangles\" to an integers.\n";
-                errorOccured = true;
-            }
-            if (errorOccured == false)
-            {
-                try
-                {
-                    return this.calculator.Integrate(viewModel.Function,
-                        xfrom, xto, rectangles);
-                }
-                catch (NullReferenceException exception)
-                { throw new NullReferenceException("No result could be obtained.", exception); }
-            }
-            else
-            {
-                throw new ArgumentException(errorMessage);
-            }
-        }
-
     }
 }

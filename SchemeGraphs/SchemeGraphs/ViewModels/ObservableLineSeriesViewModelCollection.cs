@@ -3,6 +3,9 @@ using System.Collections.Specialized;
 
 namespace SchemeGraphs.ViewModels
 {
+    /// <summary>
+    /// This Observable collection will raise the CollectionChanged event when the collection changes and when the properties inside the collection changes.
+    /// </summary>
     public class ObservableLineSeriesViewModelCollection : ObservableCollection<LineSeriesViewModel>
     {
         public void AddModel(LineSeriesViewModel model)

@@ -130,7 +130,7 @@ namespace SchemeGraphs.Views
         private void ClearClick(object sender, RoutedEventArgs e)
         {
             ModelViewCollection.ClearModel();
-            chart.Clear();
+            modelCollection.Clear();
             tb_output.Text = string.Empty;
         }
 

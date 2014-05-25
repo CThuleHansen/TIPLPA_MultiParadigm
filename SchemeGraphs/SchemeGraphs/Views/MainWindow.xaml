@@ -77,8 +77,8 @@
                 <CheckBox Name="cb_derivative" Content="Derivative"  IsChecked="{Binding Path=HasDerivative}" Style="{StaticResource ListEnableStyle}"></CheckBox>
                 <CheckBox Name="cb_integral" Content="Integral" IsChecked="{Binding Path=HasIntegral}" Style="{StaticResource ListEnableStyle}"></CheckBox>
                 
-                <Button Name="bt_SaveCurrentModel" Content="Draw" Click="DrawCurrentModel" Style="{StaticResource ListEnableStyle}"></Button>
-                <Button x:Name="bt_CalcInt" Content="Calculate integralValue" Click="Bt_CalcInt_OnClick" Style="{StaticResource ListEnableStyle}"/>
+                <Button Name="bt_SaveCurrentModel" Content="Evaluate" Click="DrawCurrentModel" Style="{StaticResource ListEnableStyle}"></Button>
+                <Button x:Name="bt_CalcInt" Content="Calculate Integral Value" Click="Bt_CalcInt_OnClick" Style="{StaticResource ListEnableStyle}"/>
                 
                 <StackPanel Orientation="Horizontal" Margin="0,0,0.2,0">
                     <Label FontWeight="Bold" Content="integralValue: "/>

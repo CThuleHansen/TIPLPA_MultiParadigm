@@ -90,7 +90,8 @@ namespace SchemeGraphs.Views
 
         private void ClearClick(object sender, RoutedEventArgs e)
         {
-            ModelViewCollection.Clear();
+            modelCollection.Clear();
+            ModelViewCollection.ClearModel();
             tb_output.Text = string.Empty;
         }
 
@@ -108,6 +109,8 @@ namespace SchemeGraphs.Views
 
         #region because binding doent cut it
 
+        private static int test = 0;
+
         private void SaveCurrentModel(object sender, RoutedEventArgs e)
         {
             if (CurrentModel == null) return;
@@ -124,7 +127,7 @@ namespace SchemeGraphs.Views
                 var model = transformer.Transform(CurrentModel);
                 var existing = modelCollection.FirstOrDefault(x => x.Name == model.Name);
                 modelCollection.Remove(existing);
-                modelCollection.Add(model);
+                    modelCollection.Add(model);
             }
             catch (Exception ex)
             {
@@ -155,7 +158,7 @@ namespace SchemeGraphs.Views
             tb_dx.IsEnabled = flag;
             tb_samples.IsEnabled = flag;
             cb_derivative.IsEnabled = flag;
-            cb_integral.IsEnabled = false;
+            cb_integral.IsEnabled = flag;
             bt_SaveCurrentModel.IsEnabled = flag;
         }
 

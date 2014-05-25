@@ -10,7 +10,7 @@ namespace SchemeGraphs.Graph
         /// </summary>
         /// <param name="name">Identifier for the series.</param>
         /// <param name="points">Points plotted.</param>
-        void AddLineSeries(string name, IEnumerable<KeyValuePair<double, double>> points, OxyColor color);
+        void AddLineSeries(string name, IEnumerable<KeyValuePair<double, double>> points);
 
         /// <summary>
         /// Graphs boxes that span the area under a line series representing the integral.

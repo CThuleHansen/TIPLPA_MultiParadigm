@@ -24,8 +24,6 @@ namespace SchemeGraphs.Views
         public ObservableLineSeriesViewModelCollection ModelViewCollection { get; set; }
         public LineSeriesViewModel CurrentModel { get; set; }
 
-        private ObservableLineSeriesModelCollection modelCollection;
-
         private ISchemeLoader loader;
         private ILineSeriesTranformer transformer;
         private ICalculate calculator;
@@ -46,57 +44,13 @@ namespace SchemeGraphs.Views
             transformer = new LineSeriesTransformer(schemeCalculator);
             this.calculator = schemeCalculator;
 
-            modelCollection = new ObservableLineSeriesModelCollection();
-            modelCollection.CollectionChanged += ModelChangedEvent;
-
             ModelViewCollection = new ObservableLineSeriesViewModelCollection();
-            ModelViewCollection.CollectionChanged += ModelViewCollectionOnCollectionChanged;
             ModelViewCollection.AddModel(new LineSeriesViewModel
                                       {
                                           Function = "(lambda (x) x)",
                                           Name = "Example 1",
                                       });
             InitializeComponent();
-        }
-
-        private void ModelViewCollectionOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
-        {
-        }
-
-        private void ModelChangedEvent(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
-        {
-            chart.Clear();
-            foreach (var model in modelCollection.Where(x => x.Name == this.CurrentModel.Name))
-            {
-                chart.AddLineSeries(model.Name, model.FunctionPlots, OxyColors.Green);
-                if (model.HasDerivative)
-                {
-                    chart.AddLineSeries(model.Name + Constants.DerivativeNamePostfix, model.DerivativePlots, OxyColors.Red);
-                }
-            }
-        }
-
-        private void AddLineSeries(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                ModelViewCollection.AddModel(new LineSeriesViewModel
-                                     {
-                                         Name = string.Format("New Func ({0})", ModelViewCollection.Count(x => x.Name.StartsWith("New Func (")) + 1),
-                                     });
-            }
-            catch (Exception ex)
-            {
-                tb_output.AppendText(ex.Message);
-            }
-        }
-
-        private void ClearClick(object sender, RoutedEventArgs e)
-        {
-            modelCollection.Clear();
-            ModelViewCollection.ClearModel();
-            chart.Clear();
-            tb_output.Text = string.Empty;
         }
 
         #region Scale checkboxes
@@ -114,10 +68,10 @@ namespace SchemeGraphs.Views
 
         private void CbYLogChecked(object sender, RoutedEventArgs e)
         {
-            if(chart != null)
+            if (chart != null)
                 chart.SetLogrithmicScale(AxisProperty.Y);
         }
-        
+
         private void CbXLogChecked(object sender, RoutedEventArgs e)
         {
             if (chart != null)
@@ -125,14 +79,50 @@ namespace SchemeGraphs.Views
         }
         #endregion
 
+        #region buttons
+
+        private void AddLineSeries(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ModelViewCollection.AddModel(new LineSeriesViewModel
+                {
+                    Name = string.Format("New Func ({0})", ModelViewCollection.Count(x => x.Name.StartsWith("New Func (")) + 1),
+                });
+            }
+            catch (Exception ex)
+            {
+                tb_output.AppendText(ex.Message);
+            }
+        }
+
+        private void DeleteSelectedLineSeries(object sender, RoutedEventArgs e)
+        {
+            this.chart.Clear();
+            this.ModelViewCollection.RemoveModel(this.CurrentModel);
+        }
+
+        private void ClearClick(object sender, RoutedEventArgs e)
+        {
+            ModelViewCollection.ClearModel();
+            chart.Clear();
+            tb_output.Text = string.Empty;
+        }
+
         private void DrawCurrentModel(object sender, RoutedEventArgs e)
         {
             try
             {
                 var model = transformer.Transform(CurrentModel);
-                var existing = modelCollection.FirstOrDefault(x => x.Uid == model.Uid);
-                modelCollection.Remove(existing);
-                modelCollection.Add(model);
+                if (model.FunctionPlots != null) this.CurrentModel.FunctionPlots = model.FunctionPlots;
+                if (this.CurrentModel.HasDerivative)
+                {
+                    if (model.DerivativePlots != null)
+                    {
+                        this.CurrentModel.DerivativePlots = model.DerivativePlots;
+                    }
+                }
+                AddLineSeriesToChart(this.CurrentModel);
             }
             catch (Exception ex)
             {
@@ -147,21 +137,24 @@ namespace SchemeGraphs.Views
                 Int32.Parse(this.CurrentModel.Rectangles)).ToString();
         }
 
-        private void DeleteSelectedLineSeries(object sender, RoutedEventArgs e)
-        {
-            this.modelCollection.Remove(modelCollection.FirstOrDefault(x => x.Uid == this.CurrentModel.Uid));
-            this.ModelViewCollection.RemoveModel(this.CurrentModel);
-        }
+        #endregion
 
         private void LstModels_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            this.chart.Clear();
-            var model = this.modelCollection.FirstOrDefault(x => x.Name == this.CurrentModel.Name);
-            if (model != null)
-            {
-                this.modelCollection.Remove(model);
-                this.modelCollection.Add(model);
+            AddLineSeriesToChart(this.CurrentModel);
+        }
 
+        private void AddLineSeriesToChart(LineSeriesViewModel lineSeriesViewModel)
+        {
+            if (this.CurrentModel != null)
+            {
+                this.chart.Clear();
+
+                if (lineSeriesViewModel.FunctionPlots != null)
+                    this.chart.AddLineSeries(lineSeriesViewModel.Name, lineSeriesViewModel.FunctionPlots);
+                if (lineSeriesViewModel.DerivativePlots != null && lineSeriesViewModel.HasDerivative)
+                    this.chart.AddLineSeries(lineSeriesViewModel.Name + Constants.DerivativeNamePostfix,
+                        lineSeriesViewModel.DerivativePlots);
             }
         }
     }

@@ -18,9 +18,9 @@ namespace SchemeGraphs.Graph.Implementation
             series = new Dictionary<string, Series>();
         }
 
-        public void AddLineSeries(string name, IEnumerable<KeyValuePair<double, double>> points, OxyColor color)
+        public void AddLineSeries(string name, IEnumerable<KeyValuePair<double, double>> points)
         {
-            var lineSeries = ToLineSeries(points, color);
+            var lineSeries = ToLineSeries(points);
             series.Add(name, lineSeries);
             Validate();
         }
@@ -83,13 +83,11 @@ namespace SchemeGraphs.Graph.Implementation
             this.model.InvalidatePlot(true);
         }
 
-        private LineSeries ToLineSeries(IEnumerable<KeyValuePair<double, double>> points, OxyColor color)
+        private LineSeries ToLineSeries(IEnumerable<KeyValuePair<double, double>> points)
         {
             var result = new LineSeries()
             {
-                Color = color,
                 MarkerType = MarkerType.Circle,
-                MarkerStrokeThickness = 10,
                 MarkerSize = 6,
             };
             foreach (var pair in points)

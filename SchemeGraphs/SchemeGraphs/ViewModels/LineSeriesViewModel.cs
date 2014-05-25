@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using SchemeGraphs.Annotations;
+using SchemeGraphs.Model;
 
 namespace SchemeGraphs.ViewModels
 {
@@ -21,6 +22,11 @@ namespace SchemeGraphs.ViewModels
             Dx = "0,000001";
             Samples = "5";
         }
+
+        public List<KeyValuePair<double, double>> FunctionPlots { get; set; }
+        public List<KeyValuePair<double, double>> DerivativePlots { get; set; }
+
+        public ObservableLineSeriesModelCollection ModelCollection { get; set; }
 
         #region properties for view
 

@@ -24,15 +24,5 @@ namespace SchemeLibrary.Math
         /// <param name="xEnd">Maximum value of x</param>
         /// <param name="noOfSamples">Number of plots.</param>        /// <returns></returns>
         IEnumerable<KeyValuePair<double, double>> PlotDerivative(string function, double dx, double xBegin, double xEnd, Int32 noOfSamples);
-        
-        /// <summary>
-        /// Creates the plots for the boxes representing a naïve technique to calculate the integral of the function supplied. 
-        /// </summary>
-        /// <param name="function">Scheme procedure. e.g. (lambda (x) (* x x))</param>
-        /// <param name="xBegin">Minimum value of x</param>
-        /// <param name="xEnd">Maximum value of x</param>
-        /// <param name="noOfSamples">Number of plots.</param>
-        /// <returns></returns>
-        IEnumerable<KeyValuePair<double, double>> PlotIntegral(string function, double xBegin, double xEnd, Int32 noOfSamples);
     }
 }

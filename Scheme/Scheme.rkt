@@ -81,7 +81,7 @@
               (lambda (x)
               (exact->inexact (/ (- (func (+ x dx)) (func x)) dx))))))
   (lambda (func dx start stop samples)
-    (if (equal? dx 0)
+    (if (= dx 0)
         '()
         (CalcFuncPairs (derivative func dx) start stop samples)))))
 

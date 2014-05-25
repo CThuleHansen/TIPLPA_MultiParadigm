@@ -44,10 +44,10 @@ namespace SchemeLibrary.Math.Implementation
             return pairs.ToList();
         }
 
-        public double Integrate(string function, double xBegin, double xEnd, int samples)
+        public double Integrate(string function, double xBegin, double xEnd, int rectangles)
         {
             var result = evaluator.Evaluate<double>("(CalcInt {0} {1} {2} {3})", evaluator.Evaluate<Callable>(function),
-                xBegin, xEnd, samples);
+                xBegin, xEnd, rectangles);
             return result;
         }
     }

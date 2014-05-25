@@ -26,7 +26,6 @@ namespace SchemeGraphs.Views
 
         private ISchemeLoader loader;
         private ILineSeriesTranformer transformer;
-        private ICalculate calculator;
         private IChart chart;
 
         public MainWindow()
@@ -41,8 +40,7 @@ namespace SchemeGraphs.Views
             loader.Import(@"Scheme.rkt");
             var evaluator = new ProxySchemeEvaluator();
             var schemeCalculator = new SchemeCalculator(evaluator);
-            transformer = new LineSeriesTransformer(schemeCalculator);
-            this.calculator = schemeCalculator;
+            transformer = new LineSeriesTransformer((IFunctionPlotter)schemeCalculator,(ICalculate)schemeCalculator);
 
             ModelViewCollection = new ObservableLineSeriesViewModelCollection();
             ModelViewCollection.AddModel(new LineSeriesViewModel
@@ -123,6 +121,7 @@ namespace SchemeGraphs.Views
                     }
                 }
                 AddLineSeriesToChart(this.CurrentModel);
+                tb_output.Text = "";
             }
             catch (Exception ex)
             {
@@ -132,32 +131,16 @@ namespace SchemeGraphs.Views
 
         private void Bt_CalcInt_OnClick(object sender, RoutedEventArgs e)
         {
-            string errorMessage = "";
-            bool errorOccured = false;
-            double xfrom, xto;
-            Int32 rectangles;
-            if (double.TryParse(this.CurrentModel.XFrom, out xfrom) == false)
+            try
             {
-                errorMessage += "It was not possible to convert \"X min\" to a double.\n";
-                errorOccured = true;
+                this.CurrentModel.Integral = this.transformer.CalculateIntegral(this.CurrentModel).ToString();
+                tb_output.Text = "";
             }
-            if (double.TryParse(this.CurrentModel.XTo, out xto) == false)
+            catch (Exception ex)
             {
-                errorMessage += "It was not possible to convert \"X max\" to a double.\n";
-                errorOccured = true;
+                tb_output.Text = ex.Message;
             }
-            if (Int32.TryParse(this.CurrentModel.Rectangles, out rectangles) == false)
-            {
-                errorMessage += "It was not possible to convert \"Rectangles\" to an integers.\n";
-                errorOccured = true;
-            }
-            if (errorOccured == false)
-                this.CurrentModel.Integral = this.calculator.Integrate(this.CurrentModel.Function,
-                    xfrom, xto, rectangles).ToString();
-            else
-            {
-                tb_output.Text = errorMessage;
-            }
+            
         }
 
         #endregion

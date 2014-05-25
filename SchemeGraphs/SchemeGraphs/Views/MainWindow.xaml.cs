@@ -132,9 +132,32 @@ namespace SchemeGraphs.Views
 
         private void Bt_CalcInt_OnClick(object sender, RoutedEventArgs e)
         {
-            this.CurrentModel.Integral = this.calculator.Integrate(this.CurrentModel.Function,
-                double.Parse(this.CurrentModel.XFrom), double.Parse(this.CurrentModel.XTo),
-                Int32.Parse(this.CurrentModel.Rectangles)).ToString();
+            string errorMessage = "";
+            bool errorOccured = false;
+            double xfrom, xto;
+            Int32 rectangles;
+            if (double.TryParse(this.CurrentModel.XFrom, out xfrom) == false)
+            {
+                errorMessage += "It was not possible to convert \"X min\" to a double.\n";
+                errorOccured = true;
+            }
+            if (double.TryParse(this.CurrentModel.XTo, out xto) == false)
+            {
+                errorMessage += "It was not possible to convert \"X max\" to a double.\n";
+                errorOccured = true;
+            }
+            if (Int32.TryParse(this.CurrentModel.Rectangles, out rectangles) == false)
+            {
+                errorMessage += "It was not possible to convert \"Rectangles\" to an integers.\n";
+                errorOccured = true;
+            }
+            if (errorOccured == false)
+                this.CurrentModel.Integral = this.calculator.Integrate(this.CurrentModel.Function,
+                    xfrom, xto, rectangles).ToString();
+            else
+            {
+                tb_output.Text = errorMessage;
+            }
         }
 
         #endregion

@@ -22,23 +22,51 @@ namespace SchemeGraphs.Graph.Implementation
         /// <returns></returns>
         public LineSeriesModel Transform(LineSeriesViewModel viewModel)
         {
-            var x_min = Double.Parse(viewModel.XFrom);
-            var x_max = Double.Parse(viewModel.XTo);
-            var samples = Int32.Parse(viewModel.Samples);
-            var delta_x = Double.Parse(viewModel.Dx);
-
-            var result = new LineSeriesModel
-                                  {
-                                      FunctionPlots = plotter.PlotFunction(viewModel.Function,x_min,x_max,samples).ToList(),
-                                  };
-            
-            if (viewModel.HasDerivative)
+            LineSeriesModel result;
+            string errorMessage = "";
+            double x_min, x_max, delta_x;
+            Int32 samples;
+            bool errorOccured = false;
+            if (double.TryParse(viewModel.XFrom, out x_min) == false)
             {
-                result.DerivativePlots =
-                    plotter.PlotDerivative(viewModel.Function, delta_x, x_min, x_max, samples).ToList();
+                errorMessage += "It was not possible to convert \"X min\" to a double.\n";
+                errorOccured = true;
             }
+            if (double.TryParse(viewModel.XTo, out x_max) == false)
+            {
+                errorMessage += "It was not possible to convert \"X max\" to a double.\n";
+                errorOccured = true;
+            }
+            if (Int32.TryParse(viewModel.Samples, out samples) == false)
+            {
+                errorMessage += "It was not possible to convert \"Samples\" to an integer.\n";
+                errorOccured = true;
+            }
+            if (errorOccured == false)
+            {
+                result = new LineSeriesModel
+                {
+                    FunctionPlots = plotter.PlotFunction(viewModel.Function, x_min, x_max, samples).ToList(),
+                };
 
-            return result;
+
+                if (viewModel.HasDerivative)
+                {
+                    if (double.TryParse(viewModel.Dx, out delta_x) == false)
+                    {
+                        errorMessage += "It was not possible to convert \"Dx\" to a double.\n";
+                        errorOccured = true;
+                    }
+                    if(errorOccured == false)
+                    result.DerivativePlots =
+                        plotter.PlotDerivative(viewModel.Function, delta_x, x_min, x_max, samples).ToList();
+                }
+                if (errorOccured == false)
+                    return result;
+            }
+            throw new ArgumentException(errorMessage);
         }
+        
+
     }
 }

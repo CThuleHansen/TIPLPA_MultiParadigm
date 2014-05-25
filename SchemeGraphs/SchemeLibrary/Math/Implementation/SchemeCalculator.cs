@@ -30,7 +30,10 @@ namespace SchemeLibrary.Math.Implementation
         
         public IEnumerable<KeyValuePair<double, double>> PlotIntegral(string function, double xBegin, double xEnd, int noOfSamples)
         {
-            throw new System.NotImplementedException();
+            var plots = evaluator.Evaluate<Cons>("(CalcFuncPairs {0} {1} {2} {3})",
+                evaluator.Evaluate<Callable>(function), xBegin, xEnd, noOfSamples);
+            var result = ConvertToPair(plots);
+            return result;
         }
 
         private IEnumerable<KeyValuePair<double, double>> ConvertToPair(Cons cons)

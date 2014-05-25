@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using OxyPlot.Axes;
 
 namespace SchemeGraphs.Graph
 {
@@ -16,7 +15,9 @@ namespace SchemeGraphs.Graph
         /// Graphs boxes that span the area under a line series representing the integral.
         /// </summary>
         /// <param name="name"></param>
-        void AddIntegralBoxes(string name);
+        /// <param name="points"></param>
+        /// <param name="integralValue"></param>
+        void AddIntegralBoxes(string name, IEnumerable<KeyValuePair<double, double>> points, double integralValue);
 
         /// <summary>
         /// Removes a component from the graph by its identifier.

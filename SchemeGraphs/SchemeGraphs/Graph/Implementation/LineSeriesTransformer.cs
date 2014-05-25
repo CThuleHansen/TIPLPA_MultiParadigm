@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using OxyPlot.Wpf;
 using SchemeGraphs.Model;
 using SchemeGraphs.ViewModels;
 using SchemeLibrary.Math;
@@ -9,10 +10,12 @@ namespace SchemeGraphs.Graph.Implementation
     public class LineSeriesTransformer : ILineSeriesTranformer
     {
         private readonly IFunctionPlotter plotter;
+        private readonly ICalculate calculator;
 
-        public LineSeriesTransformer(IFunctionPlotter plotter)
+        public LineSeriesTransformer(IFunctionPlotter plotter, ICalculate calculator)
         {
             this.plotter = plotter;
+            this.calculator = calculator;
         }
 
         /// <summary>
@@ -33,12 +36,19 @@ namespace SchemeGraphs.Graph.Implementation
                                       Function = viewModel.Function,
                                       FunctionPlots = plotter.PlotFunction(viewModel.Function,x_min,x_max,samples).ToList(),
                                       HasDerivative = viewModel.HasDerivative,
+                                      HasIntegral = viewModel.HasIntegral,
                                   };
             
             if (viewModel.HasDerivative)
             {
                 result.DerivativePlots =
                     plotter.PlotDerivative(viewModel.Function, delta_x, x_min, x_max, samples).ToList();
+            }
+
+            if (viewModel.HasIntegral)
+            {
+                result.IntegralPlots = plotter.PlotIntegral(viewModel.Function, x_min, x_max, samples).ToList();
+                result.IntegralValue = calculator.Integrate(viewModel.Function, x_min, x_max, samples);
             }
 
             return result;

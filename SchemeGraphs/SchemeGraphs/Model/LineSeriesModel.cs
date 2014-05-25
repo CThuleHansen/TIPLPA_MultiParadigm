@@ -10,5 +10,8 @@ namespace SchemeGraphs.Model
         public List<KeyValuePair<double, double>> DerivativePlots { get; set; }
 
         public bool HasDerivative { get; set; }
+        public bool HasIntegral { get; set; }
+        public List<KeyValuePair<double, double>> IntegralPlots { get; set; }
+        public double IntegralValue { get; set; }
     }
 }

@@ -53,6 +53,7 @@ namespace SchemeGraphs.Views
                                           Name = "Example 1",
                                       });
             InitializeComponent();
+            ToggleEnabled(false);
         }
 
         private void ModelViewCollectionOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
@@ -133,6 +134,7 @@ namespace SchemeGraphs.Views
 
         private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            ToggleEnabled(CurrentModel != null);
             if (CurrentModel == null) return;
             tb_function.Text = CurrentModel.Function;
             tb_name.Text = CurrentModel.Name;
@@ -142,6 +144,19 @@ namespace SchemeGraphs.Views
             tb_samples.Text = CurrentModel.Samples;
             cb_derivative.IsChecked = CurrentModel.HasDerivative;
             cb_integral.IsChecked = CurrentModel.HasIntegral;
+        }
+
+        private void ToggleEnabled(bool flag)
+        {
+            tb_function.IsEnabled = flag;
+            tb_name.IsEnabled = flag;
+            tb_xfrom.IsEnabled = flag;
+            tb_xto.IsEnabled = flag;
+            tb_dx.IsEnabled = flag;
+            tb_samples.IsEnabled = flag;
+            cb_derivative.IsEnabled = flag;
+            cb_integral.IsEnabled = false;
+            bt_SaveCurrentModel.IsEnabled = flag;
         }
 
         #endregion

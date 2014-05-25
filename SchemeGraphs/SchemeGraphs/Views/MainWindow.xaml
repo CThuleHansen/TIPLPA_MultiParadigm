@@ -61,10 +61,10 @@
                 <Label Content="Calucations:" FontWeight="Bold" Margin="0,4,0,0" ></Label>
                 <CheckBox Name="cb_derivative" Content="Derivative"></CheckBox>
                 <CheckBox Name="cb_integral" Content="Integral" IsEnabled="False"></CheckBox>
-                <Button Content="Save Changes" Click="SaveCurrentModel"></Button>
+                <Button Name="bt_SaveCurrentModel" Content="Draw" Click="SaveCurrentModel"></Button>
             </StackPanel>
             
-            <oxy:PlotView Model="{Binding Graph}" Margin="0,0,0,0" Grid.Column="2"/>
+            <oxy:PlotView Model="{Binding Graph}" Margin="0,0,60,0" Grid.Column="2"/>
         </Grid>
 
         <Label FontWeight="Bold" Content="Output:"/>

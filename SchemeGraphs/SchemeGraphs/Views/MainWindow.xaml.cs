@@ -91,6 +91,7 @@ namespace SchemeGraphs.Views
         private void ClearClick(object sender, RoutedEventArgs e)
         {
             ModelViewCollection.Clear();
+            chart.Clear();
             tb_output.Text = string.Empty;
         }
 
@@ -122,7 +123,7 @@ namespace SchemeGraphs.Views
             try
             {
                 var model = transformer.Transform(CurrentModel);
-                var existing = modelCollection.FirstOrDefault(x => x.Name == model.Name);
+                var existing = modelCollection.FirstOrDefault(x => x.Uid == model.Uid);
                 modelCollection.Remove(existing);
                 modelCollection.Add(model);
             }

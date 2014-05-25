@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
@@ -8,29 +9,30 @@ namespace SchemeGraphs.Graph.Implementation
     public class ChartAdapter : IChart
     {
         private readonly PlotModel model;
-        private readonly Dictionary<string, LineSeries> lineSeries;
+        private readonly Dictionary<string, Series> series;
 
         public ChartAdapter(PlotModel model)
         {
             this.model = model;
-            lineSeries = new Dictionary<string, LineSeries>();
+            series = new Dictionary<string, Series>();
         }
 
         public void AddLineSeries(string name, IEnumerable<KeyValuePair<double, double>> points)
         {
-            var currentLineSeries = ToLineSeries(points);
-            lineSeries.Add(name, currentLineSeries);
+            series.Add(name, ToLineSeries(points));
             Validate();
         }
 
-        public void AddIntegralBoxes(string name)
+        public void AddIntegralBoxes(string name, IEnumerable<KeyValuePair<double, double>> points, double integralValue)
         {
-            throw new System.NotImplementedException();
+            series.Add(name, ToAreaSeries(points,integralValue));
+            Validate();
         }
+
 
         public void Remove(string name)
         {
-            lineSeries.Remove(name);
+            series.Remove(name);
             Validate();
         }
 
@@ -64,7 +66,7 @@ namespace SchemeGraphs.Graph.Implementation
 
         public void Clear()
         {
-            lineSeries.Clear();
+            series.Clear();
             Validate();
         }
 
@@ -72,7 +74,7 @@ namespace SchemeGraphs.Graph.Implementation
         {
             model.Series.Clear();
 
-            foreach (var item in lineSeries)
+            foreach (var item in series)
             {
                 model.Series.Add(item.Value);
             }
@@ -90,6 +92,25 @@ namespace SchemeGraphs.Graph.Implementation
             {
                 result.Points.Add(new DataPoint(pair.Key, pair.Value));
             }
+            return result;
+        }
+
+        private AreaSeries ToAreaSeries(IEnumerable<KeyValuePair<double, double>> points, double integralValue)
+        {
+            var result = new AreaSeries
+            {
+                Title = integralValue.ToString(),
+            };
+            var p = points.ToList();
+            result.Points.Add(new DataPoint(p[0].Key,0));
+            for (int i = 0; i < p.Count-1; i++)
+            {
+                result.Points.Add(new DataPoint(p[i].Key, p[i + 1].Value));
+                result.Points.Add(new DataPoint(p[i + 1].Key, p[i + 1].Value));
+            }
+            result.Points.Add(new DataPoint(p[p.Count-1].Key,0));
+            result.Points.Add(new DataPoint(p[0].Key, 0));
+
             return result;
         }
     }

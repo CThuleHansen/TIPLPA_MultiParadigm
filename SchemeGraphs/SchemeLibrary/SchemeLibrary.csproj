@@ -50,9 +50,10 @@
   <ItemGroup>
     <Compile Include="Loaders\ISchemeEvaluator.cs" />
     <Compile Include="Loaders\ISchemeLoader.cs" />
+    <Compile Include="Math\ICalculate.cs" />
     <Compile Include="Math\IFunctionPlotter.cs" />
-    <Compile Include="Math\Implementation\SchemeCalculator.cs" />
-    <Compile Include="Math\ISchemeCalculator.cs" />
+    <Compile Include="Math\Implementation\Calculator.cs" />
+    <Compile Include="Math\Implementation\FunctionPlotter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Loaders\Implementation\ProxySchemeEvaluator.cs" />
     <Compile Include="Loaders\Implementation\SchemeLoader.cs" />

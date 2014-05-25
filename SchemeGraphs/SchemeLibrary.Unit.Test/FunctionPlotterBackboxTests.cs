@@ -23,7 +23,7 @@ namespace SchemeLibrary.Unit.Test
         public void PlotSquaredFunctionFrom1To3()
         {
             // Arrange
-            var plotter = new SchemeCalculator(evaluator);
+            var plotter = new FunctionPlotter(evaluator);
             var expected = new List<KeyValuePair<double, double>>
             {
                 new KeyValuePair<double, double>(1, 1),
@@ -42,7 +42,7 @@ namespace SchemeLibrary.Unit.Test
         public void PlotLinearFunctionFrom1To3()
         {
             // Arrange
-            var plotter = new SchemeCalculator(evaluator);
+            var plotter = new FunctionPlotter(evaluator);
             var expected = new List<KeyValuePair<double, double>>
             {
                 new KeyValuePair<double, double>(1, 1),
@@ -61,7 +61,7 @@ namespace SchemeLibrary.Unit.Test
         public void PlotLinearFunctionFrom1To3In5Points()
         {
             // Arrange
-            var plotter = new SchemeCalculator(evaluator);
+            var plotter = new FunctionPlotter(evaluator);
             var expected = new List<KeyValuePair<double, double>>
             {
                 new KeyValuePair<double, double>(1, 1),

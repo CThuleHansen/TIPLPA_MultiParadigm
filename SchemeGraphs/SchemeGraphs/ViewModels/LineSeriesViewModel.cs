@@ -13,6 +13,7 @@ namespace SchemeGraphs.ViewModels
     {
         public LineSeriesViewModel()
         {
+            Uid = Guid.NewGuid();
             Function = string.Empty;
             Name = string.Empty;
             XFrom = "1";
@@ -22,6 +23,8 @@ namespace SchemeGraphs.ViewModels
         }
 
         #region properties for view
+
+        public Guid Uid { get; private set; }
 
         private string function;
         public string Function

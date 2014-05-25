@@ -23,7 +23,7 @@ namespace SchemeGraphs.Graph.Implementation
         /// <returns></returns>
         public LineSeriesModel Transform(LineSeriesViewModel viewModel)
         {
-            LineSeriesModel result;
+            LineSeriesModel result = new LineSeriesModel();
             string errorMessage = "";
             double x_min, x_max, delta_x;
             Int32 samples;
@@ -45,17 +45,16 @@ namespace SchemeGraphs.Graph.Implementation
             }
             if (errorOccured == false)
             {
-                try
-                {
-                    result = new LineSeriesModel
+                    var plots = plotter.PlotFunction(viewModel.Function, x_min, x_max, samples);
+                    if (plots != null)
                     {
-                        FunctionPlots = plotter.PlotFunction(viewModel.Function, x_min, x_max, samples).ToList(),
-                    };
+                        result.FunctionPlots = plots.ToList();
+                    }
+                    else
+                    {
+                        throw new ArgumentException("No result could be obtained.");
+                    }
                 }
-                catch (ArgumentNullException exception)
-                { throw new ArgumentNullException("No result could be obtained.", exception); }
-
-
 
                 if (viewModel.HasDerivative)
                 {
@@ -66,20 +65,21 @@ namespace SchemeGraphs.Graph.Implementation
                     }
                     if (errorOccured == false)
                     {
-                        try
+                        var plots = plotter.PlotDerivative(viewModel.Function, delta_x, x_min, x_max, samples);
+                        if(plots != null)
+                            result.DerivativePlots = plots.ToList();
+                        else
                         {
-                        result.DerivativePlots =
-                            plotter.PlotDerivative(viewModel.Function, delta_x, x_min, x_max, samples).ToList();
+                            throw new ArgumentException("No result could be obtained.");
                         }
-                        catch (ArgumentNullException exception)
-                        { throw new ArgumentNullException("No result could be obtained.", exception); }
+
 
                     }
                 }
                 if (errorOccured == false)
                     return result;
-            }
-            throw new ArgumentException(errorMessage);
+                else
+                   throw new ArgumentException(errorMessage);
         }
 
         public double CalculateIntegral(LineSeriesViewModel viewModel)
@@ -110,8 +110,8 @@ namespace SchemeGraphs.Graph.Implementation
                     return this.calculator.Integrate(viewModel.Function,
                         xfrom, xto, rectangles);
                 }
-                catch(NullReferenceException exception)
-                { throw new NullReferenceException("No result could be obtained.", exception);}
+                catch (NullReferenceException exception)
+                { throw new NullReferenceException("No result could be obtained.", exception); }
             }
             else
             {

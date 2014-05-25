@@ -17,23 +17,26 @@ namespace SchemeLibrary.Math.Implementation
         public IEnumerable<KeyValuePair<double, double>> PlotFunction(string function, double xBegin, double xEnd, int noOfSamples)
         {
             var plots = evaluator.Evaluate<Cons>("(CalcFuncPairs {0} {1} {2} {3})", evaluator.Evaluate<Callable>(function), xBegin, xEnd, noOfSamples);
-            var result = ConvertToPair(plots);
-            return result;
+            if(plots != null)
+                return ConvertToPair(plots);
+            return null;
         }
 
         public IEnumerable<KeyValuePair<double, double>> PlotDerivative(string function, double dx, double xBegin, double xEnd, int noOfSamples)
         {
             var plots = evaluator.Evaluate<Cons>("(CalcDeriFuncPairs {0} {1} {2} {3} {4})", evaluator.Evaluate<Callable>(function), dx, xBegin, xEnd, noOfSamples);
-            var result = ConvertToPair(plots);
-            return result;
+            if (plots != null)
+                return ConvertToPair(plots);
+            return null;
         }
         
         public IEnumerable<KeyValuePair<double, double>> PlotIntegral(string function, double xBegin, double xEnd, int noOfSamples)
         {
             var plots = evaluator.Evaluate<Cons>("(CalcFuncPairs {0} {1} {2} {3})",
                 evaluator.Evaluate<Callable>(function), xBegin, xEnd, noOfSamples);
-            var result = ConvertToPair(plots);
-            return result;
+            if (plots != null)
+                return ConvertToPair(plots);
+            return null;
         }
 
         private IEnumerable<KeyValuePair<double, double>> ConvertToPair(Cons cons)

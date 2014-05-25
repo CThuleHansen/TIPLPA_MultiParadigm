@@ -26,8 +26,6 @@ namespace SchemeGraphs.ViewModels
         public List<KeyValuePair<double, double>> FunctionPlots { get; set; }
         public List<KeyValuePair<double, double>> DerivativePlots { get; set; }
 
-        public ObservableLineSeriesModelCollection ModelCollection { get; set; }
-
         #region properties for view
 
         public Guid Uid { get; private set; }

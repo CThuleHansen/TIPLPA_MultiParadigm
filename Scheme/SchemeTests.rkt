@@ -23,6 +23,7 @@
 ;(CalcFuncPairs (lambda (x) (* x x)) 1 3 2); => ((1.1) (3.9))
 ;(CalcFuncPairs (lambda (x) (* x x)) 1 3 3); => ((1 . 1) (2 . 4) (3 . 9))
 
+;The procedure "CalcFuncPairs" has already been tested further up and therefore it is not necessary to test so many cases.
 ;(CalcDeriFuncPairs (lambda (x) (* x x)) 0.001 1 3 3) ; => ((1 . 2)(2.4)(3.6))
 ;(CalcDeriFuncPairs (lambda (x) (* x x)) -0.001 1 3 3) ; => ((1 . 2)(2.4)(3.6))
 ;(CalcDeriFuncPairs (lambda (x) (* x x)) 0.00 1 3 3) ; => ((1 . 2)(2.4)(3.6))

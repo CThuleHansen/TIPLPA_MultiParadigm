@@ -17,7 +17,7 @@
                     (- stop start)))))
   (lambda (start stop samples)
     (let ((interval (Interval start stop samples)))
-      (if (and (equal? start stop) (>= samples 1))
+      (if (and (= start stop) (>= samples 1))
           (list start)
           (if (and (> stop start) (>= samples 2))
               (CalcSamplesRec interval '() start stop)

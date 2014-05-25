@@ -56,7 +56,6 @@ namespace SchemeGraphs.Views
                                           Name = "Example 1",
                                       });
             InitializeComponent();
-            ToggleEnabled(false);
         }
 
         private void ModelViewCollectionOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
@@ -98,21 +97,31 @@ namespace SchemeGraphs.Views
             tb_output.Text = string.Empty;
         }
 
+        #region Scale checkboxes
         private void CbLinearChecked(object sender, RoutedEventArgs e)
         {
             if (chart != null)
                 chart.SetLinearScale(AxisProperty.Both);
         }
 
-        private void CbLogChecked(object sender, RoutedEventArgs e)
+        private void CbXYLogChecked(object sender, RoutedEventArgs e)
         {
             if (chart != null)
                 chart.SetLogrithmicScale(AxisProperty.Both);
         }
 
-        #region because binding doent cut it
-
-        private static int test = 0;
+        private void CbYLogChecked(object sender, RoutedEventArgs e)
+        {
+            if(chart != null)
+                chart.SetLogrithmicScale(AxisProperty.Y);
+        }
+        
+        private void CbXLogChecked(object sender, RoutedEventArgs e)
+        {
+            if (chart != null)
+                chart.SetLogrithmicScale(AxisProperty.X);
+        }
+        #endregion
 
         private void CalculateIntegral(object sender, RoutedEventArgs e)
         {
@@ -120,7 +129,7 @@ namespace SchemeGraphs.Views
                 double.Parse(this.CurrentModel.XFrom), double.Parse(this.CurrentModel.XTo), Int32.Parse(this.CurrentModel.Samples)).ToString();
         }
 
-        private void SaveCurrentModel(object sender, RoutedEventArgs e)
+        private void DrawCurrentModel(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -134,34 +143,6 @@ namespace SchemeGraphs.Views
                 tb_output.Text = ex.Message;
             }
         }
-
-        private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ToggleEnabled(CurrentModel != null);
-            if (CurrentModel == null) return;
-            tb_function.Text = CurrentModel.Function;
-            tb_name.Text = CurrentModel.Name;
-            tb_xfrom.Text = CurrentModel.XFrom;
-            tb_xto.Text = CurrentModel.XTo;
-            tb_dx.Text = CurrentModel.Dx;
-            tb_samples.Text = CurrentModel.Samples;
-            cb_derivative.IsChecked = CurrentModel.HasDerivative;
-        }
-
-        private void ToggleEnabled(bool flag)
-        {
-            tb_function.IsEnabled = flag;
-            tb_name.IsEnabled = flag;
-            tb_xfrom.IsEnabled = flag;
-            tb_xto.IsEnabled = flag;
-            tb_dx.IsEnabled = flag;
-            tb_samples.IsEnabled = flag;
-            cb_derivative.IsEnabled = flag;
-            cb_integral.IsEnabled = flag;
-            bt_SaveCurrentModel.IsEnabled = flag;
-        }
-
-        #endregion
 
         private void DeleteSelectedLineSeries(object sender, RoutedEventArgs e)
         {

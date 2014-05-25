@@ -4,6 +4,11 @@
     xmlns:oxy="http://oxyplot.codeplex.com"
     x:Class="SchemeGraphs.Views.MainWindow"
     Title="Simple Scheme Embedding" Height="500" Width="800">
+<Window.Resources>
+        <Style x:Key="ListEnableStyle">
+        <Setter Property="Control.IsEnabled" Value="{Binding ElementName=lstModels, Path=SelectedItems.Count}" />
+    </Style>
+</Window.Resources>
     <StackPanel Orientation="Vertical">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -14,7 +19,7 @@
 
             <StackPanel Orientation="Vertical">
                 <Label Content="Lineseries:" FontWeight="Bold"></Label>
-                <ListView Name="lstModels" ItemsSource="{Binding ModelViewCollection, Mode=TwoWay}" SelectedItem="{Binding CurrentModel, Mode=TwoWay}" MinHeight="200" SelectionChanged="Selector_OnSelectionChanged" SelectionMode="Single">
+                <ListView Name="lstModels" ItemsSource="{Binding ModelViewCollection, Mode=TwoWay}" SelectedItem="{Binding CurrentModel, Mode=TwoWay}" MinHeight="200" SelectionMode="Single">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Vertical">
@@ -25,11 +30,13 @@
                 </ListView>
 
                 <Label Content="Scale:" FontWeight="Bold" Margin="0,4,0,0"></Label>
-                <RadioButton GroupName="rb_scale" Content="Linear" IsChecked="True" Checked="CbLinearChecked"></RadioButton>
-                <RadioButton GroupName="rb_scale" Content="Log10" Checked="CbLogChecked" ></RadioButton>
+                <RadioButton GroupName="rb_scale" Content="Linear" IsChecked="True" Checked="CbLinearChecked" Style="{StaticResource ListEnableStyle}"></RadioButton>
+                <RadioButton GroupName="rb_scale" Content="XYLog" Checked="CbXYLogChecked" Style="{StaticResource ListEnableStyle}"></RadioButton>
+                <RadioButton GroupName="rb_scale" Content="YLog" Checked="CbYLogChecked" Style="{StaticResource ListEnableStyle}"></RadioButton>
+                <RadioButton GroupName="rb_scale" Content="XLog" Checked="CbXLogChecked" Style="{StaticResource ListEnableStyle}"></RadioButton>
 
                 <Button Click="AddLineSeries" Content="Add Lineseries"/>
-                <Button Click="DeleteSelectedLineSeries" Content="Delete selected" IsEnabled="{Binding ElementName=lstModels, Path=SelectedItems.Count}">
+                <Button Click="DeleteSelectedLineSeries" Content="Delete selected" Style="{StaticResource ListEnableStyle}">
                 </Button>
                 <Button Content="Clear" Click="ClearClick" VerticalAlignment="Bottom"></Button>
 
@@ -37,38 +44,38 @@
 
             <StackPanel Grid.Column="1" Margin="10,0,10,0" DataContext="{Binding ElementName=lstModels, Path=SelectedItem}">
                 <Label FontWeight="Bold" Content="Function:"/>
-                <TextBox x:Name="tb_function" Height="36" Text="{Binding Path=Function}"/>
+                <TextBox x:Name="tb_function" Height="36" Text="{Binding Path=Function}" Style="{StaticResource ListEnableStyle}"/>
 
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Name:" FontWeight="Bold"></Label>
-                    <TextBox Name="tb_name" Width="80" Height="18" FontSize="9" Text="{Binding Path=Name}"></TextBox>
+                    <TextBox Name="tb_name" Width="80" Height="18" FontSize="9" Text="{Binding Path=Name}" Style="{StaticResource ListEnableStyle}"></TextBox>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
                     <Label FontWeight="Bold" Content="X min:"/>
-                    <TextBox x:Name="tb_xfrom" Height="18" Width="28" FontSize="10" Text="{Binding Path=XFrom}"/>
+                    <TextBox x:Name="tb_xfrom" Height="18" Width="28" FontSize="10" Text="{Binding Path=XFrom}" Style="{StaticResource ListEnableStyle}"/>
                     <Label FontWeight="Bold" Content="max:"/>
-                    <TextBox x:Name="tb_xto" Height="18" Width="28" FontSize="10" Text="{Binding Path=XTo}"/>
+                    <TextBox x:Name="tb_xto" Height="18" Width="28" FontSize="10" Text="{Binding Path=XTo}" Style="{StaticResource ListEnableStyle}"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
                     <Label FontWeight="Bold" Content="Dx:"></Label>
-                    <TextBox x:Name="tb_dx" Height="18" Width="86" FontSize="10" Text="{Binding Path=Dx}"></TextBox>
+                    <TextBox x:Name="tb_dx" Height="18" Width="86" FontSize="10" Text="{Binding Path=Dx}" Style="{StaticResource ListEnableStyle}"></TextBox>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
                     <Label FontWeight="Bold" Content="Samples:"/>
-                    <TextBox x:Name="tb_samples" Width="28" Height="18" FontSize="10" Text="{Binding Path=Samples}"/>
+                    <TextBox x:Name="tb_samples" Width="28" Height="18" FontSize="10" Text="{Binding Path=Samples}" Style="{StaticResource ListEnableStyle}"/>
                 </StackPanel>
 
                 <Label Content="Calucations:" FontWeight="Bold" Margin="0,4,0,0" ></Label>
-                <CheckBox Name="cb_derivative" Content="Derivative"  IsChecked="{Binding Path=HasDerivative}"></CheckBox>
-                <CheckBox Name="cb_integral" Content="Integral" IsChecked="{Binding Path=HasIntegral}" ></CheckBox>
-                <Button Name="bt_SaveCurrentModel" Content="Draw" Click="SaveCurrentModel"></Button>
-                <Button x:Name="bt_CalcInt" Content="Calculate integral" Click="CalculateIntegral" Margin="0,0,0.2,0"/>
+                <CheckBox Name="cb_derivative" Content="Derivative"  IsChecked="{Binding Path=HasDerivative}" Style="{StaticResource ListEnableStyle}"></CheckBox>
+                <CheckBox Name="cb_integral" Content="Integral" IsChecked="{Binding Path=HasIntegral}" Style="{StaticResource ListEnableStyle}"></CheckBox>
+                <Button Name="bt_SaveCurrentModel" Content="Draw" Click="DrawCurrentModel" Style="{StaticResource ListEnableStyle}"></Button>
+                <Button x:Name="bt_CalcInt" Content="Calculate integral" Click="CalculateIntegral" Style="{StaticResource ListEnableStyle}"/>
                 <StackPanel Orientation="Horizontal" Margin="0,0,0.2,0">
                     <Label FontWeight="Bold" Content="Integral: "/>
-                    <TextBox x:Name="tb_integral" Width="60" Height="18" FontSize="10" Text="{Binding Integral}"/>
+                    <TextBox x:Name="tb_integral" Width="60" Height="18" FontSize="10" Text="{Binding Integral}" IsReadOnly="True" Style="{StaticResource ListEnableStyle}"/>
                 </StackPanel>
             </StackPanel>
 

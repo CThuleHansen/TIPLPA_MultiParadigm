@@ -51,5 +51,16 @@ namespace SchemeLibrary.Unit.Test
             Assert.AreEqual(expected, actual);
         }
 
+        [Test, ExpectedException(typeof(NullReferenceException))]
+        public void IntegrateWith0RectsFrom1To5()
+        {
+            // Arrange
+            var schemeCalc = new SchemeCalculator(evaluator) as ICalculate;
+            double expected = 20.0;
+
+            // Act
+            schemeCalc.Integrate("(lambda (x) (* x x))", 1, 5, 0);
+        }
+
     }
 }

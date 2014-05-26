@@ -2,7 +2,7 @@
 ; returns a list of "sp" x-values equally spread out from start to stop. 
 ; Special cases:
 ;   <= 2 sample points in a interval where start does not equal stop returns '() - otherwise as stated in the description above.
-;   >= 1 sample point in an interval where start equals stop returns a list with the start/stop point - otherwise '()
+;   >= 1 sample points where start equals stop returns a list with the start/stop (which are equal points) point.
 ; For examples of usage see the tests below the procedure.
 (define CalcSamples
   (letrec ((CalcSamplesRec

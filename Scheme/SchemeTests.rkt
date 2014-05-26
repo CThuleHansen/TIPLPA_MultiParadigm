@@ -25,17 +25,17 @@
 (equal? (CalcFuncPairs (lambda (x) (* x x)) 1 3 3) (list (cons 1.0 1.0) (cons 2.0 4.0) (cons 3 9))); => ((1.0 . 1.0) (2.0 . 4.0) (3 . 9))
 
 ;The procedure "CalcFuncPairs" has already been tested further up and therefore it is not necessary to test so many cases.
-;(CalcDeriFuncPairs (lambda (x) (* x x)) 0.001 1 3 3) ; => ((1 . 2)(2.4)(3.6))
-;(CalcDeriFuncPairs (lambda (x) (* x x)) -0.001 1 3 3) ; => ((1 . 2)(2.4)(3.6))
-;(CalcDeriFuncPairs (lambda (x) (* x x)) 0.00 1 3 3) ; => ((1 . 2)(2.4)(3.6))
-;(CalcDeriFuncPairs (lambda (x) (* x x)) 0 1 3 3) ; => '()
+(CalcDeriFuncPairs (lambda (x) (* x x)) 0.001 1 3 3) ; => ((1 . 2)(2.4)(3.6))
+(CalcDeriFuncPairs (lambda (x) (* x x)) -0.001 1 3 3) ; => ((1 . 2)(2.4)(3.6))
+(equal? (CalcDeriFuncPairs (lambda (x) (* x x)) 0.00 1 3 3) '()) ; => '()
+(equal? (CalcDeriFuncPairs (lambda (x) (* x x)) 0 1 3 3) '()) ; => '()
 
-;(CalcInt (lambda (x) (* x x)) 1 1 -1); => '()
-;(CalcInt (lambda (x) (* x x)) 1 5 0); => '()
-;(CalcInt (lambda (x) (* x x)) 1 1 1); => 0
-;(CalcInt (lambda (x) (* x x)) 1 1 2); => 0
-;(CalcInt (lambda (x) (* x x)) 1 5 1); => 4 because the function x*x has a height of 1^2=1 and a width of 5-1=4 with 1 rectangle.
-;(CalcInt (lambda (x) (* x x)) 1 5 2); => 20 because the function x*x has 2 rectangles. 
+(equal? (CalcInt (lambda (x) (* x x)) 1 1 -1) '()); => '()
+(equal? (CalcInt (lambda (x) (* x x)) 1 5 0) '()); => '()
+(equal? (CalcInt (lambda (x) (* x x)) 1 1 1) 0); => 0
+(equal? (CalcInt (lambda (x) (* x x)) 1 1 2) 0); => 0
+(equal? (CalcInt (lambda (x) (* x x)) 1 5 1) 4); => 4 because the function x*x has a height of 1^2=1 and a width of 5-1=4 with 1 rectangle.
+(equal? (CalcInt (lambda (x) (* x x)) 1 5 2) 20.0); => 20 because the function x*x has 2 rectangles. 
 ; 1 rectangle at x=1 with height: 1*1=1 and width: 3-1=2 which gives the area: 1*2 = 2
 ; 1 rectangle at x=3 width height: 3*3=9 and width: 5-3=2 which gives the area: 9*2 = 18
 ; Total: 2+18 = 20.
